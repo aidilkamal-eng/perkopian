@@ -42,7 +42,7 @@ export const reviewService = {
       .from('reviews')
       .select(`
         *,
-        user_profiles (
+        public_profiles (
           name,
           avatar_url
         )
@@ -63,7 +63,7 @@ export const reviewService = {
       .from('reviews')
       .select(`
         *,
-        user_profiles (
+        public_profiles (
           name,
           avatar_url
         ),
