@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -27,15 +27,14 @@ export const supabaseLocal = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
+let activeClient: SupabaseClient = supabaseSession;
+
+export function setActiveSupabaseClient(client: SupabaseClient) {
+  activeClient = client;
+}
+
 export function getActiveSupabaseClient() {
-  const localSession = localStorage.getItem('supabase.auth.token');
-  const sessionSession = sessionStorage.getItem('supabase.auth.token');
-
-  if (localSession) return supabaseLocal;
-  if (sessionSession) return supabaseSession;
-
-  // Default fallback
-  return supabaseSession;
+  return activeClient;
 };
 
 

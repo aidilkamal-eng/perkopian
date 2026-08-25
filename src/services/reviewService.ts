@@ -7,7 +7,7 @@ type ReviewUpdate = Database['public']['Tables']['reviews']['Update'];
 const supabase = getActiveSupabaseClient();
 
 export interface ReviewWithUser extends Review {
-  user_profiles: {
+  public_profiles: {
     name: string | null;
     avatar_url: string | null;
   } | null;
@@ -15,12 +15,12 @@ export interface ReviewWithUser extends Review {
 
 export const reviewService = {
   // Check if user has already reviewed a cafe
-  async hasUserReviewedCafe(userId: string, cafeId: string): Promise<Review | null> {
+  async hasUserReviewedCafe(userId: string, cafeId: string): Promise<ReviewWithUser | null> {
     const { data, error } = await supabase
       .from('reviews')
       .select(`
         *,
-        user_profiles (
+        public_profiles (
           name,
           avatar_url
         )

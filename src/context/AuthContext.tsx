@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { supabaseSession, supabaseLocal } from '../lib/supabase';
+import { supabaseSession, supabaseLocal, setActiveSupabaseClient } from '../lib/supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -45,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Restored session from storage:", session);
 
       if (session?.user) {
+        setActiveSupabaseClient(supabaseLocal);
         await fetchUserProfile(supabaseLocal, session.user);
       } else {
         console.warn('No session found:', sessionError);
@@ -57,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription } } = supabaseLocal.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
+        setActiveSupabaseClient(supabaseLocal);
         fetchUserProfile(supabaseLocal, session.user);
       } else {
         setUser(null);
@@ -151,6 +153,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     if (data.session?.user) {
+      setActiveSupabaseClient(client);
       await fetchUserProfile(client, data.session.user);
     }
 
@@ -186,6 +189,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw localError || sessionError;
     }
     
+    setActiveSupabaseClient(supabaseSession);
     setUser(null);
   };
 

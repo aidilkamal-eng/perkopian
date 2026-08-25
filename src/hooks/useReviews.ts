@@ -22,7 +22,7 @@ export function useReviews(cafeId: string) {
       setError(null);
       const data = await reviewService.getReviewsByCafeId(cafeId);
       const localReviews = data.map((review: ReviewWithUser) => 
-        supabaseReviewToLocal(review, review.user_profiles)
+        supabaseReviewToLocal(review, review.public_profiles)
       );
       setReviews(localReviews);
     } catch (err) {
@@ -37,7 +37,7 @@ export function useReviews(cafeId: string) {
     try {
       const existingReview = await reviewService.hasUserReviewedCafe(userId, cafeId);
       if (existingReview) {
-        const localReview = supabaseReviewToLocal(existingReview, existingReview.user_profiles);
+        const localReview = supabaseReviewToLocal(existingReview, existingReview.public_profiles);
         setUserReview(localReview);
       } else {
         setUserReview(null);
@@ -159,7 +159,7 @@ export function useUserReviews(userId: string) {
       setError(null);
       const data = await reviewService.getReviewsByUserId(userId);
       const localReviews = data.map((review: ReviewWithUser) => 
-        supabaseReviewToLocal(review, review.user_profiles)
+        supabaseReviewToLocal(review, review.public_profiles)
       );
       setReviews(localReviews);
     } catch (err) {
