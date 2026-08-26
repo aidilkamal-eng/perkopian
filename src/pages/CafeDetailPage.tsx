@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
-  MapPin, Clock, Wifi, Battery, VolumeX, Coffee, 
+  MapPin, Clock, Wifi, Battery, VolumeX, 
   ThumbsUp, Share2, Bookmark, Star, Plus, ChevronDown, ChevronUp, Edit, Trash2
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
@@ -9,7 +9,6 @@ import RatingStars from '../components/RatingStars';
 import ReviewCard from '../components/ReviewCard';
 import ReviewForm from '../components/ReviewForm';
 import { bookmarkService } from '../services/bookmarkService';
-import { reviewService } from '../services/reviewService';
 import { useCafe } from '../hooks/useCafes';
 import { useReviews } from '../hooks/useReviews';
 
@@ -125,21 +124,6 @@ const CafeDetailPage: React.FC = () => {
       } catch (err) {
         console.error('Failed to delete review:', err);
       }
-    }
-  };
-
-  const [localHelpful, setLocalHelpful] = useState<Record<string, number>>({});
-
-  const handleMarkHelpful = async (reviewId: string) => {
-    try {
-      setLocalHelpful(prev => ({
-        ...prev,
-        [reviewId]: (prev[reviewId] || 0) + 1,
-      }));
-
-      await reviewService.updateHelpfulCount(reviewId, true);
-    } catch (error) {
-      console.error('Error marking review helpful:', error);
     }
   };
   
@@ -476,7 +460,6 @@ const CafeDetailPage: React.FC = () => {
                       <div className="p-4">
                         <ReviewCard 
                           review={userReview}
-                          onHelpful={() => updateHelpfulCount(userReview.id, true)}
                         />
                       </div>
                     </div>
@@ -489,7 +472,6 @@ const CafeDetailPage: React.FC = () => {
                       <ReviewCard 
                         key={review.id} 
                         review={review}
-                        onHelpful={() => updateHelpfulCount(review.id, true)}
                       />
                     )
                   ))}

@@ -2,7 +2,6 @@ import { getActiveSupabaseClient } from '../lib/supabase';
 import type { Database } from '../lib/supabase';
 
 type Bookmark = Database['public']['Tables']['bookmarks']['Row'];
-type BookmarkInsert = Database['public']['Tables']['bookmarks']['Insert'];
 type CafeSummary = Database['public']['Views']['cafe_with_review_summary']['Row'];
 
 const supabase = getActiveSupabaseClient();

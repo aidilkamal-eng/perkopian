@@ -15,7 +15,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
   });
 
   const handleFilterChange = (name: string, value: any) => {
-    setFilters((prevFilters) => {
+    setFilters(() => {
       const updatedFilters = { ...filters, [name]: value };
       onFilterChange(updatedFilters);
       console.log("Received filters:", updatedFilters);

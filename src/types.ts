@@ -8,7 +8,6 @@ export interface Cafe {
   photos: string[];
   hours: string;
   googleMapsEmbedUrl: string | null;
-  priceLevel: string;
   overallRating: number;
   wifiRating: number;
   powerOutlets: number;

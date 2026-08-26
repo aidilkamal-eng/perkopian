@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ThumbsUp, Flag } from 'lucide-react';
+import { ThumbsUp } from 'lucide-react';
 import RatingStars from './RatingStars';
 import { Review } from '../types';
 import { useAuth } from '../hooks/useAuth';
@@ -23,19 +23,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
     };
     load();
   }, [review.id, user?.id]);
-
-  const toggleHelpful = async () => {
-    if (!user) return;
-    if (hasVoted) {
-      await reviewService.unmarkHelpful(review.id, user.id);
-    } else {
-      await reviewService.markHelpful(review.id, user.id);
-    }
-
-    const count = await reviewService.getHelpfulCount(review.id);
-    setHelpfulCount(count);
-    setHasVoted(!hasVoted);
-  }
   
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mb-4">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Coffee, Search, MapPin, Star, ArrowRight } from 'lucide-react';
+import { Coffee, Search, Star, ArrowRight } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import CafeCard from '../components/CafeCard';
 import { useCafes } from '../hooks/useCafes';

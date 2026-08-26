@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { 
-  User, Settings, Bookmark, Star, Edit, LogOut, 
-  Mail, Globe, MapPin, Save, AlertCircle, CheckCircle 
+  Settings, Bookmark, Star, LogOut, 
+  Mail, MapPin, AlertCircle, CheckCircle 
 } from 'lucide-react';
 import ReviewCard from '../components/ReviewCard';
 import CafeCard from '../components/CafeCard';
-import { getActiveSupabaseClient } from '../lib/supabase';
 import { useBookmarks } from "../hooks/useBookmarks";
 import { useAuth } from '../hooks/useAuth';
 import { useUserReviews } from '../hooks/useReviews';
 import { supabaseCafeToLocal } from '../types';
 
-const supabase = getActiveSupabaseClient();
 
 const ProfilePage: React.FC = () => {
   const { user, updateProfile, updatePassword, logout } = useAuth();

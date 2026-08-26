@@ -57,12 +57,7 @@ const SignupPage: React.FC = () => {
       }, 2000);
       
     } catch (err: unknown) {
-      const error = err as { message?: string; error_description?: string };
       console.error('Signup failed:', err);
-      
-      // Handle different types of signup errors
-      const message = err?.message || err?.error_description || 'Terjadi kesalahan saat mendaftar';
-      toast.error(err?.message || err?.error_description || 'Terjadi kesalahan saat mendaftar');
       
     } finally {
       setIsLoading(false);

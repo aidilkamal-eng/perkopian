@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Coffee, Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Coffee, Mail, Lock, LogIn } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../hooks/useAuth';
 
@@ -11,7 +11,6 @@ const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasTriedLogin, setHasTriedLogin] = useState(false);
   const [error, setError] = useState('');
-  const location = useLocation();
   const navigate = useNavigate();
   const { login, user } = useAuth();
 
