@@ -22,14 +22,14 @@ const ProfilePage: React.FC = () => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   // Now user is guaranteed to exist due to PrivateRoute
-  const { reviews: userReviews, loading: reviewsLoading } = useUserReviews(user.id);
-  const { bookmarkedCafes, loading: bookmarksLoading } = useBookmarks(user.id);
+  const { reviews: userReviews, loading: reviewsLoading } = useUserReviews(user!.id);
+  const { bookmarkedCafes, loading: bookmarksLoading } = useBookmarks(user!.id);
   
   // Form states
   const [formData, setFormData] = useState({
-    name: user.name || '',
-    bio: user.bio || '',
-    location: user.location || '',
+    name: user!.name || '',
+    bio: user!.bio || '',
+    location: user!.location || '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
@@ -53,7 +53,6 @@ const ProfilePage: React.FC = () => {
         location: formData.location,
       });
       setSuccessMessage('Profil berhasil diperbarui');
-      setIsEditing(false);
     } catch (err: any) {
       console.error('Profile update error:', err);
       setError(err.message || 'Gagal memperbarui profil');
@@ -125,23 +124,23 @@ const ProfilePage: React.FC = () => {
         <div className="px-6 py-4 flex flex-col md:flex-row md:items-end -mt-16">
           <div className="flex-shrink-0">
             <img 
-              src={user.avatar_url || '/disposable-coffee-paper-cup-icon.png'} 
-              alt={user.name || 'User'} 
+              src={user!.avatar_url || '/disposable-coffee-paper-cup-icon.png'} 
+              alt={user!.name || 'User'} 
               className="h-32 w-32 rounded-full border-4 border-white object-cover"
             />
           </div>
           <div className="mt-6 md:mt-0 md:ml-6 md:pb-4">
-            <h1 className="text-2xl font-bold text-gray-900">{user.name || 'User'}</h1>
-            <p className="text-gray-600">{user.bio || 'Belum ada bio'}</p>
+            <h1 className="text-2xl font-bold text-gray-900">{user!.name || 'User'}</h1>
+            <p className="text-gray-600">{user!.bio || 'Belum ada bio'}</p>
             <div className="mt-2 flex flex-wrap gap-4">
               <div className="flex items-center text-gray-500">
                 <Mail className="h-4 w-4 mr-1" />
-                <span>{user.email}</span>
+                <span>{user!.email}</span>
               </div>
-              {user.location && (
+              {user!.location && (
                 <div className="flex items-center text-gray-500">
                   <MapPin className="h-4 w-4 mr-1" />
-                  <span>{user.location}</span>
+                  <span>{user!.location}</span>
                 </div>
               )}
             </div>
@@ -271,7 +270,7 @@ const ProfilePage: React.FC = () => {
                           type="email"
                           id="email"
                           name="email"
-                          value={user.email || ''}
+                          value={user!.email || ''}
                           disabled
                           className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100"
                         />

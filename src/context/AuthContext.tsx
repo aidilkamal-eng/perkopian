@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { supabaseSession, supabaseLocal, setActiveSupabaseClient } from '../lib/supabase';
+import { supabaseSession, supabaseLocal, setActiveSupabaseClient, getActiveSupabaseClient } from '../lib/supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -40,33 +40,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const restoreSession = async () => {
       setLoading(true);
 
-      const { data: sessionData, error: sessionError } = await supabaseLocal.auth.getSession();
-      const session = sessionData?.session;
-      console.log("Restored session from storage:", session);
-
-      if (session?.user) {
+      const { data: localData } = await supabaseLocal.auth.getSession();
+      if (localData?.session?.user) {
         setActiveSupabaseClient(supabaseLocal);
-        await fetchUserProfile(supabaseLocal, session.user);
-      } else {
-        console.warn('No session found:', sessionError);
-        setUser(null);
-        setLoading(false);
+        await fetchUserProfile(supabaseLocal, localData.session.user);
+        return;
       }
+
+      const { data: sessionData } = await supabaseSession.auth.getSession();
+      if  (sessionData?.session?.user) {
+        setActiveSupabaseClient(supabaseSession);
+        await fetchUserProfile(supabaseSession, sessionData.session.user);
+        return;
+      }
+
+      console.warn('No session found:');
+      setUser(null);
+      setLoading(false);
     };
 
     restoreSession();
 
-    const { data: { subscription } } = supabaseLocal.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setActiveSupabaseClient(supabaseLocal);
-        fetchUserProfile(supabaseLocal, session.user);
-      } else {
-        setUser(null);
-        setLoading(false);
+    const { data: { subscription: localSub } } = supabaseLocal.auth.onAuthStateChange(
+      (_event, session) => {
+        if (session?.user) {
+          setActiveSupabaseClient(supabaseLocal);
+          fetchUserProfile(supabaseLocal, session.user);
+        } else {
+          setUser(null);
+          setLoading(false);
+        }
       }
-    });
+    );
 
-    return () => subscription.unsubscribe();
+    const { data: { subscription: sessionSub } } = supabaseSession.auth.onAuthStateChange(
+      (_event, session) => {
+        if (session?.user) {
+          setActiveSupabaseClient(supabaseSession);
+          fetchUserProfile(supabaseSession, session.user);
+        } else {
+          setUser(null);
+          setLoading(false);
+        }
+      }
+    );
+
+    return () => {
+      localSub.unsubscribe();
+      sessionSub.unsubscribe();
+    };
   }, []);
 
   const fetchUserProfile = async (client: SupabaseClient, authUser: SupabaseUser) => {
@@ -195,7 +217,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updateProfile = async (data: Partial<UserProfile>) => {
     if (!user) throw new Error('No user logged in');
-    const client = supabaseLocal;
+    const client = getActiveSupabaseClient();
     const { error } = await client
       .from('user_profiles')
       .update({ ...data, updated_at: new Date().toISOString() })
@@ -210,7 +232,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const updatePassword = async (newPassword: string) => {
-    const { error } = await supabaseLocal.auth.updateUser({ password: newPassword });
+    const client = getActiveSupabaseClient();
+    const { error } = await client.auth.updateUser({ password: newPassword });
     if (error) {
       console.error('Password update error:', error);
       throw error;

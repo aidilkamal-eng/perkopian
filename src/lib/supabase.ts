@@ -11,6 +11,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export const supabaseSession = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: sessionStorage,
+    storageKey: 'sb-session-auth-token',
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
@@ -21,6 +22,7 @@ export const supabaseSession = createClient(supabaseUrl, supabaseAnonKey, {
 export const supabaseLocal = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: localStorage,
+    storageKey: 'sb-local-auth-token',
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
