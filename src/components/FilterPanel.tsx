@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Wifi, Battery, VolumeX, Coffee, DollarSign, Users, Thermometer } from 'lucide-react';
+import { Wifi, Battery, VolumeX, DollarSign, Thermometer } from 'lucide-react';
 
 interface FilterPanelProps {
   onFilterChange: (filters: any) => void;

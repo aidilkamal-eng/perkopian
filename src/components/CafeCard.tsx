@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Wifi, Battery, VolumeX, Coffee, Star } from 'lucide-react';
+import { Wifi, Battery, VolumeX, Star } from 'lucide-react';
 import { Cafe } from '../types';
 
 interface CafeCardProps {
