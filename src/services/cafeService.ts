@@ -1,11 +1,8 @@
 import { getActiveSupabaseClient } from '../lib/supabase';
 import type { Database } from '../lib/supabase';
 
-type Cafe = Database['public']['Tables']['cafes']['Row'];
-type CafeInsert = Database['public']['Tables']['cafes']['Insert'];
-type CafeUpdate = Database['public']['Tables']['cafes']['Update'];
+type CafeView = Database['public']['Views']['cafe_with_review_summary']['Row'];
 
-const VALID_PRICE_LEVELS = ['$', '$$', '$$$'];
 const supabase = getActiveSupabaseClient();
 
 export const cafeService = {
@@ -24,7 +21,7 @@ export const cafeService = {
   },
 
   // Get all cafes
-  async getCafes(): Promise<Cafe[]> {
+  async getCafes(): Promise<CafeView[]> {
     const { data, error } = await supabase
       .from('cafe_with_review_summary')
       .select('*')
@@ -39,7 +36,7 @@ export const cafeService = {
   },
 
   // Get a cafe by ID
-  async getCafeById(id: string): Promise<Cafe | null> {
+  async getCafeById(id: string): Promise<CafeView | null> {
     const { data, error } = await supabase
       .from('cafe_with_review_summary')
       .select('*')
@@ -56,7 +53,7 @@ export const cafeService = {
   },
 
   // Search cafes
-  async searchCafes(query: string, location?: string): Promise<Cafe[]> {
+  async searchCafes(query: string, location?: string): Promise<CafeView[]> {
     let queryBuilder = supabase.from('cafe_with_review_summary').select('*');
 
     const filters: string[] = [];
@@ -82,105 +79,4 @@ export const cafeService = {
 
     return data || [];
   },
-
-  // Filter cafes
-  async filterCafes(filters: {
-    wifiQuality?: number;
-    powerOutlets?: number;
-    noiseLevel?: number;
-    priceLevel?: string;
-    crowdedness?: number;
-    comfort?: number;
-  }): Promise<Cafe[]> {
-    let queryBuilder = supabase.from('cafes').select('*');
-
-    if (filters.wifiQuality && filters.wifiQuality > 0) {
-      queryBuilder = queryBuilder.gte('wifi_rating', filters.wifiQuality);
-    }
-
-    if (filters.powerOutlets && filters.powerOutlets > 0) {
-      queryBuilder = queryBuilder.gte('power_outlets', filters.powerOutlets);
-    }
-
-    if (filters.noiseLevel) {
-      if (filters.noiseLevel === 1) {
-        queryBuilder = queryBuilder.lte('noise_level', 2);
-      } else if (filters.noiseLevel === 2) {
-        queryBuilder = queryBuilder.gte('noise_level', 2).lte('noise_level', 3.5);
-      } else if (filters.noiseLevel === 3) {
-        queryBuilder = queryBuilder.gte('noise_level', 3.5);
-      }
-    }
-
-    if (filters.priceLevel && VALID_PRICE_LEVELS.includes(filters.priceLevel)) {
-      queryBuilder = queryBuilder.eq('price_level', filters.priceLevel);
-    }
-
-    if (filters.comfort && filters.comfort > 0) {
-      queryBuilder = queryBuilder.gte('comfort', filters.comfort);
-    }
-
-    const { data, error } = await queryBuilder.order('overall_rating', { ascending: false });
-
-    if (error) {
-      console.error('Error filtering cafes:', error);
-      throw error;
-    }
-
-    return data || [];
-  },
-
-  // Create a cafe
-  async createCafe(cafe: CafeInsert): Promise<Cafe> {
-    const { data, error } = await supabase
-      .from('cafes')
-      .insert({
-        ...cafe,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error creating cafe:', error);
-      throw error;
-    }
-
-    return data;
-  },
-
-  // Update a cafe
-  async updateCafe(id: string, updates: CafeUpdate): Promise<Cafe> {
-    const { data, error } = await supabase
-      .from('cafes')
-      .update({
-        ...updates,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error updating cafe:', error);
-      throw error;
-    }
-
-    return data;
-  },
-
-  // Delete a cafe
-  async deleteCafe(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('cafes')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error('Error deleting cafe:', error);
-      throw error;
-    }
-  },
-
 };

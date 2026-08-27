@@ -8,7 +8,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Session (temporary login)
-export const supabaseSession = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabaseSession = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: sessionStorage,
     storageKey: 'sb-session-auth-token',
@@ -19,7 +19,7 @@ export const supabaseSession = createClient(supabaseUrl, supabaseAnonKey, {
 });
 
 // Local (remember me login)
-export const supabaseLocal = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabaseLocal = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: localStorage,
     storageKey: 'sb-local-auth-token',
@@ -29,9 +29,9 @@ export const supabaseLocal = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-let activeClient: SupabaseClient = supabaseSession;
+let activeClient = supabaseSession;
 
-export function setActiveSupabaseClient(client: SupabaseClient) {
+export function setActiveSupabaseClient(client: SupabaseClient<Database>) {
   activeClient = client;
 }
 
@@ -61,7 +61,6 @@ export interface Database {
           power_outlets: number
           noise_level: number
           comfort: number
-          coffee_quality: number
           review_count: number
           created_at: string
           updated_at: string
@@ -82,7 +81,6 @@ export interface Database {
           power_outlets?: number
           noise_level?: number
           comfort?: number
-          coffee_quality?: number
           review_count?: number
           created_at?: string
           updated_at?: string
@@ -148,6 +146,7 @@ export interface Database {
           wifi_rating: number | null
           power_outlets: number | null
           noise_level: number | null
+          price_level: string | null
           comfort: number | null
           photos: string[]
           helpful_count: number
@@ -162,6 +161,7 @@ export interface Database {
           wifi_rating?: number | null
           power_outlets?: number | null
           noise_level?: number | null
+          price_level?: string | null
           comfort?: number | null
           photos?: string[]
           helpful_count?: number
@@ -176,6 +176,7 @@ export interface Database {
           wifi_rating?: number | null
           power_outlets?: number | null
           noise_level?: number | null
+          price_level?: string | null
           comfort?: number | null
           photos?: string[]
           helpful_count?: number
@@ -200,6 +201,71 @@ export interface Database {
           user_id?: string | null
           cafe_id?: string | null
           created_at?: string
+        }
+      }
+    }
+
+    Views: {
+      cafe_with_review_summary: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          address: string | null
+          neighborhood: string | null
+          image_url: string | null
+          photos: string[]
+          hours: string | null
+          google_maps_embed_url: string | null
+          price_level: string | null
+          overall_rating: number
+          wifi_rating: number
+          power_outlets: number
+          noise_level: number
+          comfort: number
+          review_count: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          name: string
+          description: string | null
+          address: string | null
+          neighborhood: string | null
+          image_url: string | null
+          photos: string[]
+          hours: string | null
+          google_maps_embed_url: string | null
+          price_level: string | null
+          overall_rating: number
+          wifi_rating: number
+          power_outlets: number
+          noise_level: number
+          comfort: number
+          review_count: number
+          created_at: string
+          updated_at: string
+        }
+        Update: {
+          id: string
+          name: string
+          description: string | null
+          address: string | null
+          neighborhood: string | null
+          image_url: string | null
+          photos: string[]
+          hours: string | null
+          google_maps_embed_url: string | null
+          price_level: string | null
+          overall_rating: number
+          wifi_rating: number
+          power_outlets: number
+          noise_level: number
+          comfort: number
+          review_count: number
+          created_at: string
+          updated_at: string
         }
       }
     }

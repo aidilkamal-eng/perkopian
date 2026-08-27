@@ -51,7 +51,9 @@ const CafeDetailPage: React.FC = () => {
   const [isEditingReview, setIsEditingReview] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
-  const calculateAverage = (key: keyof typeof reviews[0]) =>
+  const calculateAverage = (
+    key: 'overallRating' | 'wifiRating' | 'powerOutlets' | 'noiseLevel' | 'comfort'
+  ) =>
     reviews.length > 0
       ? reviews.reduce((acc, r) => acc + (r[key] || 0), 0) / reviews.length
       : 0;

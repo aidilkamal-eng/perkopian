@@ -9,7 +9,6 @@ import CafeCard from '../components/CafeCard';
 import { useBookmarks } from "../hooks/useBookmarks";
 import { useAuth } from '../hooks/useAuth';
 import { useUserReviews } from '../hooks/useReviews';
-import { supabaseCafeToLocal } from '../types';
 
 
 const ProfilePage: React.FC = () => {
@@ -203,7 +202,7 @@ const ProfilePage: React.FC = () => {
               ) : bookmarkedCafes.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {bookmarkedCafes.map((cafe) => (
-                    <CafeCard key={cafe.id} cafe={supabaseCafeToLocal(cafe)} />
+                    <CafeCard key={cafe.id} cafe={cafe} />
                   ))}
                 </div>
               ) : (

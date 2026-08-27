@@ -59,8 +59,6 @@ export interface SupabaseCafe {
   power_outlets: number;
   noise_level: number;
   comfort: number;
-  coffee_quality: number;
-  crowdedness: number;
   review_count: number;
   created_at: string;
   updated_at: string;

@@ -1,7 +1,7 @@
 // src/hooks/useBookmarks.ts
 import { useEffect, useState } from 'react';
 import { bookmarkService } from '../services/bookmarkService';
-import { Cafe } from '../types';
+import { Cafe, supabaseCafeToLocal } from '../types';
 
 export const useBookmarks = (userId: string | undefined) => {
   const [bookmarkedCafes, setBookmarkedCafes] = useState<Cafe[]>([]);
@@ -12,7 +12,7 @@ export const useBookmarks = (userId: string | undefined) => {
       if (!userId) return;
       try {
         const cafes = await bookmarkService.getUserBookmarks(userId);
-        setBookmarkedCafes(cafes);
+        setBookmarkedCafes(cafes.map(supabaseCafeToLocal));
       } catch (err) {
         console.error('Failed to fetch bookmarks:', err);
       } finally {
