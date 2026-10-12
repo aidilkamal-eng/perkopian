@@ -5,15 +5,15 @@ import { useAuth } from './hooks/useAuth';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import HomePage from './pages/HomePage';
-import CafeListPage from './pages/CafeListPage';
-import CafeDetailPage from './pages/CafeDetailPage';
-import ProfilePage from './pages/ProfilePage';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
+import HomePage from './views/HomePage';
+import CafeListPage from './views/CafeListPage';
+import CafeDetailPage from './views/CafeDetailPage';
+import ProfilePage from './views/ProfilePage';
+import LoginPage from './views/LoginPage';
+import SignupPage from './views/SignupPage';
 import PrivateRoute from './components/PrivateRoute';
-import AboutPage from './pages/AboutPage';
-import NotFoundPage from './pages/NotFoundPage';
+import AboutPage from './views/AboutPage';
+import NotFoundPage from './views/NotFoundPage';
 
 function App() {
   return (

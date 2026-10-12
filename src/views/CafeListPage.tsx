@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { MapPin, List, Map as MapIcon, SlidersHorizontal, X } from 'lucide-react';
