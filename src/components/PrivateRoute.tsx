@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Coffee } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';

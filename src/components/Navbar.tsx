@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Coffee, Menu, X, Search, MapPin, User, LogOut } from 'lucide-react';
