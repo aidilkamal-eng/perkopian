@@ -254,7 +254,7 @@ const CafeListPage: React.FC = () => {
           <div className="mb-4 flex items-center text-gray-600">
             <MapPin className="h-4 w-4 mr-1" />
             {searchLocation ? (
-              <span>Hasil dari "{searchLocation}"</span>
+              <span>{`Hasil dari "${searchLocation}"`}</span>
             ) : (
               <span>Semua lokasi</span>
             )}
