@@ -44,7 +44,7 @@ export const cafeService = {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116' || error.code === '22P02') return null;
       console.error('Error fetching cafe by ID:', error);
       throw error;
     }
