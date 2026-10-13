@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Coffee, Home } from 'lucide-react';
 
 const NotFoundPage: React.FC = () => {
@@ -14,7 +14,7 @@ const NotFoundPage: React.FC = () => {
         </p>
         <div className="mt-8">
           <Link 
-            to="/" 
+            href="/" 
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
           >
             <Home className="h-5 w-5 mr-2" />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Wifi, Battery, VolumeX, Star } from 'lucide-react';
 import { Cafe } from '../types';
 
@@ -12,7 +12,7 @@ const safeToFixed = (value: number | null | undefined, digits: number = 1) =>
 
 const CafeCard: React.FC<CafeCardProps> = ({ cafe }) => {
   return (
-    <Link to={`/cafes/${cafe.id}`} className="block">
+    <Link href={`/cafes/${cafe.id}`} className="block">
       <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-lg">
         <div className="relative h-48 overflow-hidden">
           <img 

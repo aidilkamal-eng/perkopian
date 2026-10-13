@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Coffee, Menu, X, Search, MapPin, User, LogOut } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import ConfirmDialog from './ConfirmDialog';
@@ -12,14 +13,14 @@ const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
       await logout();
       setIsUserMenuOpen(false);
       toast.success('Anda telah keluar.');
-      navigate('/');
+      router.push('/');
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -27,7 +28,7 @@ const Navbar: React.FC = () => {
 
   const handleProfileClick = () => {
     setIsUserMenuOpen(false);
-    navigate('/profile');
+    router.push('/profile');
   };
 
   return (
@@ -35,17 +36,17 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center">
+            <Link href="/" className="flex-shrink-0 flex items-center">
               <Coffee className="h-8 w-8 text-amber-600" />
               <span className="ml-2 text-xl font-bold text-amber-800">Perkopian</span>
             </Link>
           </div>
           
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-            <Link to="/cafes" className="text-gray-700 hover:text-amber-600 p-1" title="Cari Warkop">
+            <Link href="/cafes" className="text-gray-700 hover:text-amber-600 p-1" title="Cari Warkop">
               <Search className="h-5 w-5" />
             </Link>
-            <Link to="/cafes" className="text-gray-700 hover:text-amber-600 p-1" title="Lokasi">
+            <Link href="/cafes" className="text-gray-700 hover:text-amber-600 p-1" title="Lokasi">
               <MapPin className="h-5 w-5" />
             </Link>
             
@@ -88,13 +89,13 @@ const Navbar: React.FC = () => {
             ) : (
               <div className="flex items-center space-x-2">
                 <Link 
-                  to="/login" 
+                  href="/login" 
                   className="text-gray-700 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Masuk
                 </Link>
                 <Link 
-                  to="/signup" 
+                  href="/signup" 
                   className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Daftar
@@ -119,14 +120,14 @@ const Navbar: React.FC = () => {
         <div className="sm:hidden">
           <div className="pt-2 pb-3 space-y-1">
             <Link 
-              to="/" 
+              href="/" 
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link 
-              to="/cafes" 
+              href="/cafes" 
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
               onClick={() => setIsMenuOpen(false)}
             >
@@ -149,7 +150,7 @@ const Navbar: React.FC = () => {
                   </div>
                   <div className="mt-3 space-y-1">
                     <Link 
-                      to="/profile" 
+                      href="/profile" 
                       className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -170,14 +171,14 @@ const Navbar: React.FC = () => {
             ) : (
               <>
                 <Link 
-                  to="/login" 
+                  href="/login" 
                   className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Masuk
                 </Link>
                 <Link 
-                  to="/signup" 
+                  href="/signup" 
                   className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
                   onClick={() => setIsMenuOpen(false)}
                 >

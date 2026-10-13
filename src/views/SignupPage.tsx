@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Coffee, Mail, Lock, User, UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import toast from 'react-hot-toast';
@@ -15,7 +16,7 @@ const SignupPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const navigate = useNavigate();
+  const router = useRouter();
   const { signup } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,7 +56,7 @@ const SignupPage: React.FC = () => {
       
       // Redirect to home after a short delay
       setTimeout(() => {
-        navigate('/');
+        router.push('/');
       }, 2000);
       
     } catch (err: unknown) {
@@ -234,7 +235,7 @@ const SignupPage: React.FC = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Sudah punya akun?{' '}
-            <Link to="/login" className="font-medium text-amber-600 hover:text-amber-500">
+            <Link href="/login" className="font-medium text-amber-600 hover:text-amber-500">
               Masuk
             </Link>
           </p>

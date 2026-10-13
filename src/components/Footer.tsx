@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Coffee, Instagram, Twitter, Facebook, Github } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -35,17 +35,17 @@ const Footer: React.FC = () => {
             <h3 className="text-sm font-semibold uppercase tracking-wider">Explore</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link to="/cafes" className="text-amber-200 hover:text-white">
+                <Link href="/cafes" className="text-amber-200 hover:text-white">
                   Cari Warkop
                 </Link>
               </li>
               <li>
-                <Link to="/cafes" className="text-amber-200 hover:text-white">
+                <Link href="/cafes" className="text-amber-200 hover:text-white">
                   Rating Tertinggi
                 </Link>
               </li>
               <li>
-                <Link to="/cafes" className="text-amber-200 hover:text-white">
+                <Link href="/cafes" className="text-amber-200 hover:text-white">
                   Lokasi terdekat
                 </Link>
               </li>
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
             <h3 className="text-sm font-semibold uppercase tracking-wider">Company</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link to="/about" className="text-amber-200 hover:text-white">
+                <Link href="/about" className="text-amber-200 hover:text-white">
                   Tentang Kami
                 </Link>
               </li>

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Coffee, Mail, Lock, LogIn } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../hooks/useAuth';
@@ -13,12 +14,13 @@ const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasTriedLogin, setHasTriedLogin] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
   const { login, user } = useAuth();
+
+  const router = useRouter();
 
   useEffect(() => {
     if (user && hasTriedLogin) {
-      navigate('/', { replace: true });
+      router.replace('/');
     }
   }, [user, hasTriedLogin]);
 
@@ -32,7 +34,7 @@ const LoginPage: React.FC = () => {
       await login(email, password, rememberMe);
       toast.success('Berhasil masuk!');
       setHasTriedLogin(true);
-      navigate('/');
+      router.push('/');
     } catch (err: any) {
       // Handle different types of auth errors
       if (err.message?.includes('Invalid login credentials')) {
@@ -155,7 +157,7 @@ const LoginPage: React.FC = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Belum punya akun?{' '}
-            <Link to="/signup" className="font-medium text-amber-600 hover:text-amber-500">
+            <Link href="/signup" className="font-medium text-amber-600 hover:text-amber-500">
               Daftar sekarang
             </Link>
           </p>
