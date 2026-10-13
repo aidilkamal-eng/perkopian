@@ -1,5 +1,10 @@
 import ProfilePage from "@/src/views/ProfilePage";
+import PrivateRoute from "@/src/components/PrivateRoute";
 
 export default function Page() {
-    return <ProfilePage />
+    return (
+        <PrivateRoute>
+            <ProfilePage />
+        </PrivateRoute>
+    );
 }
