@@ -24,6 +24,8 @@
 
 This project started as a scaffold generated with [Bolt.new](https://bolt.new). I then exported it, pushed it to a self-managed Git repository, refactored the code, fixed several bugs, and deployed it independently to Vercel.
 
+I later migrated the project from Vite and React Router to Next.js (App Router), replacing client-side routing with file-based routing.
+
 ### Features
 
 - 🔍 Search & filter cafés by WiFi quality, power outlets, noise level, price, and comfort
@@ -37,17 +39,17 @@ This project started as a scaffold generated with [Bolt.new](https://bolt.new). 
 
 | Category | Technology |
 |---|---|
-| Frontend | React 18, TypeScript, Vite |
+| Frontend | React 19, TypeScript, Next.js |
 | Styling | Tailwind CSS |
 | Backend & Database | Supabase (Auth + PostgreSQL) |
-| Routing | React Router v6 |
+| Routing | Next.js App Router (file-based routing) |
 | Others | Lucide React (icons), React Hot Toast (notifications) |
 
 ### Getting Started
 
 #### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 20.9+ and npm
 - A [Supabase](https://supabase.com) project (URL + anon key)
 
 #### Installation
@@ -63,8 +65,8 @@ npm install
 Create a `.env` file in the project root:
 
 ```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 #### Run locally
@@ -77,8 +79,8 @@ npm run dev
 
 ```bash
 npm run build     # production build
-npm run lint       # run ESLint
-npm run preview    # preview the production build
+npm run start     # run the production build
+npm run lint      # run ESLint
 ```
 
 ### License
@@ -101,6 +103,8 @@ This project is published for portfolio purposes. Please contact me before reusi
 
 Project ini awalnya dibuat dari scaffold [Bolt.new](https://bolt.new). Saya kemudian meng-export-nya, push ke repository Git milik sendiri, melakukan refactor kode, memperbaiki beberapa bug, dan men-deploy secara mandiri ke Vercel.
 
+Saya kemudian memigrasikan project ini dari Vite dan React Router ke Next.js (App Router), dengan mengganti client-side routing menjadi routing berbasis file.
+
 ### Fitur
 
 - 🔍 Cari & filter warkop berdasarkan kualitas WiFi, soket listrik, kebisingan, harga, dan kenyamanan
@@ -114,17 +118,17 @@ Project ini awalnya dibuat dari scaffold [Bolt.new](https://bolt.new). Saya kemu
 
 | Kategori | Teknologi |
 |---|---|
-| Frontend | React 18, TypeScript, Vite |
+| Frontend | React 19, TypeScript, Next.js |
 | Styling | Tailwind CSS |
 | Backend & Database | Supabase (Auth + PostgreSQL) |
-| Routing | React Router v6 |
+| Routing | Next.js App Router (file-based routing) |
 | Lainnya | Lucide React (ikon), React Hot Toast (notifikasi) |
 
 ### Getting Started
 
 #### Prasyarat
 
-- Node.js 18+ dan npm
+- Node.js 20.9+ dan npm
 - Project [Supabase](https://supabase.com) (URL + anon key)
 
 #### Instalasi
@@ -140,8 +144,8 @@ npm install
 Buat file `.env` di root project:
 
 ```env
-VITE_SUPABASE_URL=url_project_supabase_anda
-VITE_SUPABASE_ANON_KEY=anon_key_supabase_anda
+NEXT_PUBLIC_SUPABASE_URL=url_project_supabase_anda
+NEXT_PUBLIC_SUPABASE_ANON_KEY=anon_key_supabase_anda
 ```
 
 #### Menjalankan secara lokal
@@ -154,8 +158,8 @@ npm run dev
 
 ```bash
 npm run build     # build untuk production
-npm run lint       # menjalankan ESLint
-npm run preview    # preview hasil build production
+npm run start     # menjalankan build production
+npm run lint      # menjalankan ESLint
 ```
 
 ### Lisensi

@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Coffee, Search, Star, ArrowRight } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import CafeCard from '../components/CafeCard';
@@ -8,7 +11,7 @@ import { useCafes } from '../hooks/useCafes';
 const HomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchLocation, setSearchLocation] = useState('');
-  const navigate = useNavigate();
+  const router = useRouter();
   const { cafes, loading, error } = useCafes();
 
   const handleSearch = (query: string, location: string) => {
@@ -20,7 +23,7 @@ const HomePage: React.FC = () => {
     if (query) params.set('q', query);
     if (location) params.set('location', location);
     
-    navigate(`/cafes?${params.toString()}`);
+    router.push(`/cafes?${params.toString()}`);
   };
 
   // Get top rated cafes for the featured section
@@ -50,13 +53,13 @@ const HomePage: React.FC = () => {
             </div>
             
             <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <Link to="/cafes" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm transition-colors">
+              <Link href="/cafes" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm transition-colors">
                 Warkop Rating Teratas
               </Link>
-              <Link to="/cafes" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm transition-colors">
+              <Link href="/cafes" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm transition-colors">
                 Suasana Tenang
               </Link>
-              <Link to="/cafes" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm transition-colors">
+              <Link href="/cafes" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm transition-colors">
                 Wifi Kencang
               </Link>
             </div>
@@ -105,7 +108,7 @@ const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold text-gray-900">Warkop Rating Tertinggi</h2>
-            <Link to="/cafes" className="text-amber-600 hover:text-amber-800 flex items-center">
+            <Link href="/cafes" className="text-amber-600 hover:text-amber-800 flex items-center">
               Lihat Selengkapnya <ArrowRight className="h-4 w-4 ml-1" />
             </Link>
           </div>
@@ -149,7 +152,7 @@ const HomePage: React.FC = () => {
           <h2 className="text-3xl font-bold mb-4">Tahu Warkop yang Bagus?</h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto">Bantu komunitas dengan bergabung dan membagikan pengalaman pada warkop favoritmu.</p>
           <Link 
-            to="/signup" 
+            href="/signup" 
             className="inline-block bg-white text-amber-600 hover:bg-amber-100 px-6 py-3 rounded-lg font-medium text-lg transition-colors"
           >
             Join Perkopian

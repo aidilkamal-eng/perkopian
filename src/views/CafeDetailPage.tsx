@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
 import { 
   MapPin, Clock, Wifi, Battery, VolumeX, 
   ThumbsUp, Share2, Bookmark, Star, Plus, ChevronDown, ChevronUp, Edit, Trash2
@@ -15,7 +18,7 @@ import { useReviews } from '../hooks/useReviews';
 const CafeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated, user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   
   const { cafe, loading: cafeLoading, error: cafeError } = useCafe(id!);
   const { reviews, userReview, loading: reviewsLoading, addReview, updateReview, deleteReview, checkUserReview } = useReviews(id!);
@@ -155,7 +158,7 @@ const CafeDetailPage: React.FC = () => {
         <p className="text-red-600 text-lg mb-4">
           {cafeError || 'Warkop tidak ditemukan'}
         </p>
-        <Link to="/cafes" className="text-amber-600 hover:text-amber-800">
+        <Link href="/cafes" className="text-amber-600 hover:text-amber-800">
           Kembali ke daftar warkop
         </Link>
       </div>
@@ -164,7 +167,7 @@ const CafeDetailPage: React.FC = () => {
   
   const handleWriteReview = () => {
     if (!isAuthenticated) {
-      navigate('/login');
+      router.push('/login');
       return;
     }
     setIsEditingReview(false);
@@ -176,7 +179,7 @@ const CafeDetailPage: React.FC = () => {
   
   const toggleBookmark = async () => {
     if (!isAuthenticated) {
-      navigate('/login');
+      router.push('/login');
       return;
     }
 
@@ -196,9 +199,9 @@ const CafeDetailPage: React.FC = () => {
       {/* Breadcrumbs */}
       <div className="mb-4">
         <nav className="text-sm text-gray-500">
-          <Link to="/" className="hover:text-amber-600">Home</Link>
+          <Link href="/" className="hover:text-amber-600">Home</Link>
           <span className="mx-2">›</span>
-          <Link to="/cafes" className="hover:text-amber-600">Warkop</Link>
+          <Link href="/cafes" className="hover:text-amber-600">Warkop</Link>
           <span className="mx-2">›</span>
           <span className="text-gray-900">{cafe.name}</span>
         </nav>

@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { MapPin, List, Map as MapIcon, SlidersHorizontal, X } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import FilterPanel from '../components/FilterPanel';
@@ -10,7 +12,9 @@ import { supabaseCafeToLocal } from '../types';
 import type { Cafe } from '../types';
 
 const CafeListPage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const { cafes: allCafes, loading: allCafesLoading, error: allCafesError } = useCafes();
   
   const [filteredCafes, setFilteredCafes] = useState<Cafe[]>([]);
@@ -113,7 +117,7 @@ const CafeListPage: React.FC = () => {
     const params = new URLSearchParams();
     if (query) params.set('q', query);
     if (location) params.set('location', location);
-    setSearchParams(params);
+    router.replace(`/cafes?${params.toString()}`);
     
     performSearch(query, location);
   };
@@ -164,8 +168,8 @@ const CafeListPage: React.FC = () => {
     setSearchQuery('');
     setSearchLocation('');
     setActiveFilters({});
-    setSearchParams(new URLSearchParams());
     setFilteredCafes(sortCafes(allCafes, sortBy));
+    router.push(`/cafes`);
   };
 
   return (
@@ -250,7 +254,7 @@ const CafeListPage: React.FC = () => {
           <div className="mb-4 flex items-center text-gray-600">
             <MapPin className="h-4 w-4 mr-1" />
             {searchLocation ? (
-              <span>Hasil dari "{searchLocation}"</span>
+              <span>{`Hasil dari "${searchLocation}"`}</span>
             ) : (
               <span>Semua lokasi</span>
             )}

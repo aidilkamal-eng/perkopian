@@ -1,4 +1,5 @@
-// components/ConfirmDialog.tsx
+'use client';
+
 import React from 'react';
 
 interface ConfirmDialogProps {

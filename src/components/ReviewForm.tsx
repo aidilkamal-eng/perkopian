@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Star, Wifi, Battery, VolumeX, ThumbsUp } from 'lucide-react';
 import RatingStars from './RatingStars';

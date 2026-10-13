@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { 
   Settings, Bookmark, Star, LogOut, 
   Mail, MapPin, AlertCircle, CheckCircle 
@@ -211,7 +213,7 @@ const ProfilePage: React.FC = () => {
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Belum ada warkop tersimpan</h3>
                   <p className="text-gray-500 mb-4">Kamu belum menyimpan warkop apapun.</p>
                   <Link 
-                    to="/cafes" 
+                    href="/cafes" 
                     className="inline-block bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md"
                   >
                     Jelajahi warkop
@@ -410,7 +412,7 @@ function UserReviewsSection({
           {userReviews.map(review => (
             <div key={review.id}>
               <div className="mb-2">
-                <Link to={`/cafes/${review.cafeId}`} className="text-lg font-medium text-amber-600 hover:text-amber-800">
+                <Link href={`/cafes/${review.cafeId}`} className="text-lg font-medium text-amber-600 hover:text-amber-800">
                   {review.cafeName}
                 </Link>
               </div>
@@ -424,7 +426,7 @@ function UserReviewsSection({
           <h3 className="text-lg font-medium text-gray-900 mb-2">Belum ada review</h3>
           <p className="text-gray-500 mb-4">Kamu belum menulis review apapun.</p>
           <Link 
-            to="/cafes" 
+            href="/cafes" 
             className="inline-block bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md"
           >
             Cari warkop untuk direview
