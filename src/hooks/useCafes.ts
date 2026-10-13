@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { cafeService } from '../services/cafeService';
+import { getErrorMessage } from '../lib/errors';
 import { supabaseCafeToLocal } from '../types';
 import type { Cafe } from '../types';
 
@@ -21,7 +22,7 @@ export function useCafes() {
         }
         if (isMounted) setCafes(data.map(supabaseCafeToLocal));
       } catch (err) {
-        if (isMounted) setError(err instanceof Error ? err.message : String(err));
+        if (isMounted) setError(getErrorMessage(err));
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -36,7 +37,7 @@ export function useCafes() {
     setError(null);
     cafeService.getCafes()
       .then(data => setCafes(data.map(supabaseCafeToLocal)))
-      .catch(err => setError(err instanceof Error ? err.message : String(err)))
+      .catch(err => setError(getErrorMessage(err)))
       .finally(() => setLoading(false));
   };
 
@@ -58,7 +59,7 @@ export function useCafe(id: string) {
         const data = await cafeService.getCafeById(id);
         if (isMounted) setCafe(data ? supabaseCafeToLocal(data) : null);
       } catch (err) {
-        if (isMounted) setError(err instanceof Error ? err.message : String(err));
+        if (isMounted) setError(getErrorMessage(err));
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -73,7 +74,7 @@ export function useCafe(id: string) {
     setError(null);
     cafeService.getCafeById(id)
       .then(data => setCafe(data ? supabaseCafeToLocal(data) : null))
-      .catch(err => setError(err instanceof Error ? err.message : String(err)))
+      .catch(err => setError(getErrorMessage(err)))
       .finally(() => setLoading(false));
   };
 
