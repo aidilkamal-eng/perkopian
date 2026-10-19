@@ -9,7 +9,7 @@ import CafeCard from '../components/CafeCard';
 import { useCafes } from '../hooks/useCafes';
 import { cafeService } from '../services/cafeService';
 import { supabaseCafeToLocal } from '../types';
-import type { Cafe } from '../types';
+import type { Cafe, CafeFilters } from '../types';
 
 const CafeListPage: React.FC = () => {
   const searchParams = useSearchParams();
@@ -24,7 +24,7 @@ const CafeListPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [searchLocation, setSearchLocation] = useState(searchParams.get('location') || '');
   const [showFilters, setShowFilters] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<any>({});
+  const [activeFilters, setActiveFilters] = useState<Partial<CafeFilters>>({});
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [sortBy, setSortBy] = useState<string>('rating');
 
@@ -78,18 +78,18 @@ const CafeListPage: React.FC = () => {
     }
   };
 
-  const applyFilters = (cafes: Cafe[], filters: any): Cafe[] => {
+  const applyFilters = (cafes: Cafe[], filters: Partial<CafeFilters>): Cafe[] => {
     let results = [...cafes];
     
-    if (filters.wifiQuality > 0) {
-      results = results.filter(cafe => cafe.wifiRating >= filters.wifiQuality);
+    if ((filters.wifiQuality ?? 0) > 0) {
+      results = results.filter(cafe => cafe.wifiRating >= filters.wifiQuality!);
     }
     
     if (filters.powerOutlets && filters.powerOutlets > 0) {
-      results = results.filter(cafe => cafe.powerOutlets >= filters.powerOutlets);
+      results = results.filter(cafe => cafe.powerOutlets >= filters.powerOutlets!);
     }
     
-    if (filters.noiseLevel > 0) {
+    if ((filters.noiseLevel ?? 0) > 0) {
       results = results.filter(cafe => {
         if (filters.noiseLevel === 1) return cafe.noiseLevel <= 2;
         if (filters.noiseLevel === 2) return cafe.noiseLevel > 2 && cafe.noiseLevel <= 3.5;
@@ -102,8 +102,8 @@ const CafeListPage: React.FC = () => {
       results = results.filter(cafe => cafe.priceLevel === filters.priceLevel);
     }
     
-    if (filters.comfort > 0) {
-      results = results.filter(cafe => cafe.comfort >= filters.comfort);
+    if ((filters.comfort ?? 0) > 0) {
+      results = results.filter(cafe => cafe.comfort >= filters.comfort!);
     }
     
     return results;
@@ -155,14 +155,8 @@ const CafeListPage: React.FC = () => {
     setShowFilters(!showFilters);
   };
 
-  const hasActiveFilters = () => {
-    return Object.values(activeFilters).some(value => {
-      if (typeof value === 'boolean') return value;
-      if (typeof value === 'number') return value > 0;
-      if (typeof value === 'string') return value !== '';
-      return false;
-    });
-  };
+  const isFilterSet = (v: string | number | undefined) =>
+    v !== undefined && v !== 0 && v !== '';
 
   const clearAllFilters = () => {
     setSearchQuery('');
@@ -171,6 +165,8 @@ const CafeListPage: React.FC = () => {
     setFilteredCafes(sortCafes(allCafes, sortBy));
     router.push(`/cafes`);
   };
+
+  const activeCount = Object.values(activeFilters).filter(isFilterSet).length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -205,14 +201,14 @@ const CafeListPage: React.FC = () => {
                 
                 <div className="md:hidden">
                   <button
-                    className={`p-2 rounded-md flex items-center ${hasActiveFilters() ? 'bg-amber-100 text-amber-800' : 'text-gray-500 hover:bg-gray-100'}`}
+                    className={`p-2 rounded-md flex items-center ${activeCount > 0 ? 'bg-amber-100 text-amber-800' : 'text-gray-500 hover:bg-gray-100'}`}
                     onClick={toggleFilters}
                   >
                     <SlidersHorizontal className="h-5 w-5 mr-1" />
                     Filter
-                    {hasActiveFilters() && (
+                    {activeCount > 0 && (
                       <span className="ml-1 bg-amber-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                        {Object.values(activeFilters).filter(v => v !== 0 && v !== '' && v !== false).length}
+                        {activeCount}
                       </span>
                     )}
                   </button>

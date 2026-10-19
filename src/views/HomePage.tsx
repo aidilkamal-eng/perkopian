@@ -9,15 +9,10 @@ import CafeCard from '../components/CafeCard';
 import { useCafes } from '../hooks/useCafes';
 
 const HomePage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchLocation, setSearchLocation] = useState('');
   const router = useRouter();
   const { cafes, loading, error } = useCafes();
 
-  const handleSearch = (query: string, location: string) => {
-    setSearchQuery(query);
-    setSearchLocation(location);
-    
+  const handleSearch = (query: string, location: string) => { 
     // Navigate to cafes page with search parameters
     const params = new URLSearchParams();
     if (query) params.set('q', query);

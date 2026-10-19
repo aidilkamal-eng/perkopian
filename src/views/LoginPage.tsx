@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Coffee, Mail, Lock, LogIn } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../hooks/useAuth';
+import { getErrorMessage } from '../lib/errors';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +14,6 @@ const LoginPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasTriedLogin, setHasTriedLogin] = useState(false);
-  const [error, setError] = useState('');
   const { login, user } = useAuth();
 
   const router = useRouter();
@@ -26,7 +26,6 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
     setHasTriedLogin(true);
     
@@ -35,16 +34,17 @@ const LoginPage: React.FC = () => {
       toast.success('Berhasil masuk!');
       setHasTriedLogin(true);
       router.push('/');
-    } catch (err: any) {
+    } catch (err) {
+      const message = getErrorMessage(err);
       // Handle different types of auth errors
-      if (err.message?.includes('Invalid login credentials')) {
+      if (message.includes('Invalid login credentials')) {
         toast.error('Email atau password salah.');
-      } else if (err.message?.includes('Email not confirmed')) {
+      } else if (message.includes('Email not confirmed')) {
         toast.error('Silakan konfirmasi email Anda terlebih dahulu');
-      } else if (err.message?.includes('Too many requests')) {
+      } else if (message.includes('Too many requests')) {
         toast.error('Terlalu banyak percobaan login. Coba lagi nanti');
       } else {
-        toast.error(err.message || 'Terjadi kesalahan saat login');
+        toast.error(message || 'Terjadi kesalahan saat login');
       }
     } finally {
       setIsLoading(false);

@@ -19,6 +19,14 @@ export interface Cafe {
   updatedAt: string;
 }
 
+export interface CafeFilters {
+  wifiQuality: number;
+  powerOutlets: number;
+  noiseLevel: number;
+  priceLevel: string;
+  comfort: number;
+}
+
 export interface User {
   id: string;
   name: string;

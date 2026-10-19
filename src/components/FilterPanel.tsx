@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import { Wifi, Battery, VolumeX, DollarSign, Thermometer } from 'lucide-react';
+import { CafeFilters } from '../types';
 
 interface FilterPanelProps {
-  onFilterChange: (filters: any) => void;
+  onFilterChange: (filters: CafeFilters) => void;
 }
 
 const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
@@ -16,7 +17,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
     comfort: 0,
   });
 
-  const handleFilterChange = (name: string, value: any) => {
+  const handleFilterChange = (name: keyof CafeFilters, value: number | string) => {
     setFilters(() => {
       const updatedFilters = { ...filters, [name]: value };
       onFilterChange(updatedFilters);
