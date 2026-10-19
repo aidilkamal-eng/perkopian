@@ -64,11 +64,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     restoreSession();
 
     const { data: { subscription: localSub } } = supabaseLocal.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         if (session?.user) {
           setActiveSupabaseClient(supabaseLocal);
           fetchUserProfile(supabaseLocal, session.user);
-        } else {
+        } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setLoading(false);
         }
@@ -76,11 +76,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 
     const { data: { subscription: sessionSub } } = supabaseSession.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         if (session?.user) {
           setActiveSupabaseClient(supabaseSession);
           fetchUserProfile(supabaseSession, session.user);
-        } else {
+        } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setLoading(false);
         }
