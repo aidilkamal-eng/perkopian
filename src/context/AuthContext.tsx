@@ -38,6 +38,76 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
 
+  const createUserProfile = async (client: SupabaseClient, authUser: SupabaseUser) => {
+    setProfileLoading(true);
+    try {
+      const profileData = {
+        id: authUser.id,
+        name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'User',
+        bio: null,
+        location: null,
+        avatar_url: authUser.user_metadata?.avatar_url || `/disposable-coffee-paper-cup-icon.png`,
+      };
+
+      console.log('Creating user profile:', profileData);
+      const { data: profile, error } = await client
+        .from('user_profiles')
+        .insert(profileData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating user profile:', error);
+        throw error;
+      }
+
+      console.log('User profile created:', profile);
+      setUser({
+        ...profile,
+        email: authUser.email || '',
+      });
+    } catch (error) {
+      console.error('Error creating user profile:', error);
+      setLoading(false);
+      setProfileLoading(false);
+    }
+  };
+
+  const fetchUserProfile = async (client: SupabaseClient, authUser: SupabaseUser) => {
+    setProfileLoading(true);
+    try {
+      console.log('Fetching profile for user:', authUser.id);
+      const { data: profile, error } = await client
+        .from('user_profiles')
+        .select('*')
+        .eq('id', authUser.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        if (error?.code === 'PGRST116' || error?.message?.includes('No rows')) {
+          console.log('Profile not found, creating new profile...');
+          await createUserProfile(client, authUser);
+          setLoading(false);
+          return;
+        }
+        setLoading(false);
+        return;
+      }
+
+      console.log('User profile fetched:', profile);
+      setUser({
+        ...profile,
+        email: authUser.email || '',
+      });
+    } catch (error) {
+      console.error('Error in fetchUserProfile:', error);
+    } finally {
+      setLoading(false);
+      setProfileLoading(false);
+    }
+  };
+
   useEffect(() => {
     const restoreSession = async () => {
       setLoading(true);
@@ -92,76 +162,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       sessionSub.unsubscribe();
     };
   }, []);
-
-  const fetchUserProfile = async (client: SupabaseClient, authUser: SupabaseUser) => {
-    setProfileLoading(true);
-    try {
-      console.log('Fetching profile for user:', authUser.id);
-      const { data: profile, error } = await client
-        .from('user_profiles')
-        .select('*')
-        .eq('id', authUser.id)
-        .single();
-
-      if (error) {
-        console.error('Error fetching user profile:', error);
-        if (error?.code === 'PGRST116' || error?.message?.includes('No rows')) {
-          console.log('Profile not found, creating new profile...');
-          await createUserProfile(client, authUser);
-          setLoading(false);
-          return;
-        }
-        setLoading(false);
-        return;
-      }
-
-      console.log('User profile fetched:', profile);
-      setUser({
-        ...profile,
-        email: authUser.email || '',
-      });
-    } catch (error) {
-      console.error('Error in fetchUserProfile:', error);
-    } finally {
-      setLoading(false);
-      setProfileLoading(false);
-    }
-  };
-
-  const createUserProfile = async (client: SupabaseClient, authUser: SupabaseUser) => {
-    setProfileLoading(true);
-    try {
-      const profileData = {
-        id: authUser.id,
-        name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'User',
-        bio: null,
-        location: null,
-        avatar_url: authUser.user_metadata?.avatar_url || `/disposable-coffee-paper-cup-icon.png`,
-      };
-
-      console.log('Creating user profile:', profileData);
-      const { data: profile, error } = await client
-        .from('user_profiles')
-        .insert(profileData)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating user profile:', error);
-        throw error;
-      }
-
-      console.log('User profile created:', profile);
-      setUser({
-        ...profile,
-        email: authUser.email || '',
-      });
-    } catch (error) {
-      console.error('Error creating user profile:', error);
-      setLoading(false);
-      setProfileLoading(false);
-    }
-  };
 
   const login = async (email: string, password: string, rememberMe: boolean) => {
     setLoading(true);

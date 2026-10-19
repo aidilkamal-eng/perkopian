@@ -28,56 +28,6 @@ const CafeListPage: React.FC = () => {
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [sortBy, setSortBy] = useState<string>('rating');
 
-  // Initialize search from URL params
-  useEffect(() => {
-    const query = searchParams.get('q') || '';
-    const location = searchParams.get('location') || '';
-    setSearchQuery(query);
-    setSearchLocation(location);
-    
-    if (query || location) {
-      performSearch(query, location);
-    }
-  }, [searchParams]);
-
-  // Use all cafes when no search/filters are active
-  useEffect(() => {
-    if (!searchQuery && !searchLocation && Object.keys(activeFilters).length === 0) {
-      setFilteredCafes(sortCafes(allCafes, sortBy));
-      setLoading(allCafesLoading);
-      setError(allCafesError);
-    }
-  }, [allCafes, allCafesLoading, allCafesError, sortBy, searchQuery, searchLocation, activeFilters]);
-
-  const performSearch = async (query: string, location: string, filters = activeFilters) => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      let results: Cafe[] = [];
-      
-      if (query || location) {
-        const data = await cafeService.searchCafes(query, location);
-        results = data.map(supabaseCafeToLocal);
-      } else {
-        results = allCafes;
-      }
-      
-      // Apply filters
-      results = applyFilters(results, filters);
-      
-      // Apply sorting
-      results = sortCafes(results, sortBy);
-      
-      setFilteredCafes(results);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to search cafes');
-      console.error('Error searching cafes:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const applyFilters = (cafes: Cafe[], filters: Partial<CafeFilters>): Cafe[] => {
     let results = [...cafes];
     
@@ -109,6 +59,71 @@ const CafeListPage: React.FC = () => {
     return results;
   };
 
+  const sortCafes = (cafesToSort: Cafe[], sortOption: string) => {
+    switch (sortOption) {
+      case 'rating':
+        return [...cafesToSort].sort((a, b) => b.overallRating - a.overallRating);
+      case 'wifi':
+        return [...cafesToSort].sort((a, b) => b.wifiRating - a.wifiRating);
+      case 'newest':
+        return [...cafesToSort].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      case 'popular':
+        return [...cafesToSort].sort((a, b) => b.reviewCount - a.reviewCount);
+      default:
+        return cafesToSort;
+    }
+  };
+
+  const performSearch = async (query: string, location: string, filters = activeFilters) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      let results: Cafe[] = [];
+      
+      if (query || location) {
+        const data = await cafeService.searchCafes(query, location);
+        results = data.map(supabaseCafeToLocal);
+      } else {
+        results = allCafes;
+      }
+      
+      // Apply filters
+      results = applyFilters(results, filters);
+      
+      // Apply sorting
+      results = sortCafes(results, sortBy);
+      
+      setFilteredCafes(results);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to search cafes');
+      console.error('Error searching cafes:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize search from URL params
+  useEffect(() => {
+    const query = searchParams.get('q') || '';
+    const location = searchParams.get('location') || '';
+    setSearchQuery(query);
+    setSearchLocation(location);
+    
+    if (query || location) {
+      performSearch(query, location);
+    }
+  }, [searchParams]);
+
+  // Use all cafes when no search/filters are active
+  useEffect(() => {
+    if (!searchQuery && !searchLocation && Object.keys(activeFilters).length === 0) {
+      setFilteredCafes(sortCafes(allCafes, sortBy));
+      setLoading(allCafesLoading);
+      setError(allCafesError);
+    }
+  }, [allCafes, allCafesLoading, allCafesError, sortBy, searchQuery, searchLocation, activeFilters]);
+
   const handleSearch = (query: string, location: string) => {
     setSearchQuery(query);
     setSearchLocation(location);
@@ -128,21 +143,6 @@ const CafeListPage: React.FC = () => {
     
     // Re-apply search with new filters
     performSearch(searchQuery, searchLocation, filters);
-  };
-
-  const sortCafes = (cafesToSort: Cafe[], sortOption: string) => {
-    switch (sortOption) {
-      case 'rating':
-        return [...cafesToSort].sort((a, b) => b.overallRating - a.overallRating);
-      case 'wifi':
-        return [...cafesToSort].sort((a, b) => b.wifiRating - a.wifiRating);
-      case 'newest':
-        return [...cafesToSort].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      case 'popular':
-        return [...cafesToSort].sort((a, b) => b.reviewCount - a.reviewCount);
-      default:
-        return cafesToSort;
-    }
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
