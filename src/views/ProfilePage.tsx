@@ -104,18 +104,6 @@ const ProfilePage: React.FC = () => {
       setError('Gagal logout');
     }
   };
-
-  // Update form data when user data changes
-  React.useEffect(() => {
-    if (user) {
-      setFormData(prev => ({
-        ...prev,
-        name: user.name || '',
-        bio: user.bio || '',
-        location: user.location || '',
-      }));
-    }
-  }, [user]);
   
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

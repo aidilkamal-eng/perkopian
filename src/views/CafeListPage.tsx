@@ -127,7 +127,7 @@ const CafeListPage: React.FC = () => {
     router.replace(`/cafes?${params.toString()}`);
   };
 
-  const handleFilterChange = (filters: any) => {
+  const handleFilterChange = (filters: CafeFilters) => {
     setActiveFilters(filters);
     console.log("Received filters:", filters);
     
