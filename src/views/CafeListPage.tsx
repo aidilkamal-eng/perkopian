@@ -21,8 +21,8 @@ const CafeListPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [searchLocation, setSearchLocation] = useState(searchParams.get('location') || '');
+  const searchQuery = useSearchParams().get('q') || '';
+  const searchLocation = useSearchParams().get('location') || '';
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Partial<CafeFilters>>({});
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
@@ -105,15 +105,10 @@ const CafeListPage: React.FC = () => {
 
   // Initialize search from URL params
   useEffect(() => {
-    const query = searchParams.get('q') || '';
-    const location = searchParams.get('location') || '';
-    setSearchQuery(query);
-    setSearchLocation(location);
-    
-    if (query || location) {
-      performSearch(query, location);
+    if (searchQuery || searchLocation) {
+      performSearch(searchQuery, searchLocation);
     }
-  }, [searchParams]);
+  }, [searchQuery, searchLocation]);
 
   // Use all cafes when no search/filters are active
   useEffect(() => {
@@ -125,16 +120,11 @@ const CafeListPage: React.FC = () => {
   }, [allCafes, allCafesLoading, allCafesError, sortBy, searchQuery, searchLocation, activeFilters]);
 
   const handleSearch = (query: string, location: string) => {
-    setSearchQuery(query);
-    setSearchLocation(location);
-    
     // Update URL params
     const params = new URLSearchParams();
     if (query) params.set('q', query);
     if (location) params.set('location', location);
     router.replace(`/cafes?${params.toString()}`);
-    
-    performSearch(query, location);
   };
 
   const handleFilterChange = (filters: any) => {
@@ -159,8 +149,6 @@ const CafeListPage: React.FC = () => {
     v !== undefined && v !== 0 && v !== '';
 
   const clearAllFilters = () => {
-    setSearchQuery('');
-    setSearchLocation('');
     setActiveFilters({});
     setFilteredCafes(sortCafes(allCafes, sortBy));
     router.push(`/cafes`);
