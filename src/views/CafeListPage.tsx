@@ -74,6 +74,12 @@ const CafeListPage: React.FC = () => {
     }
   };
 
+  const hasSearchOrFilters = Boolean(searchQuery || searchLocation || Object.keys(activeFilters).length > 0);
+
+  const displayedCafes = hasSearchOrFilters ? filteredCafes : sortCafes(allCafes, sortBy);
+  const isLoading = hasSearchOrFilters ? loading : allCafesLoading;
+  const displayError = hasSearchOrFilters ? error : allCafesError;
+
   const performSearch = async (query: string, location: string, filters = activeFilters) => {
     try {
       setLoading(true);
@@ -106,18 +112,10 @@ const CafeListPage: React.FC = () => {
   // Initialize search from URL params
   useEffect(() => {
     if (searchQuery || searchLocation) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- fetches data on mount
       performSearch(searchQuery, searchLocation);
     }
   }, [searchQuery, searchLocation]);
-
-  // Use all cafes when no search/filters are active
-  useEffect(() => {
-    if (!searchQuery && !searchLocation && Object.keys(activeFilters).length === 0) {
-      setFilteredCafes(sortCafes(allCafes, sortBy));
-      setLoading(allCafesLoading);
-      setError(allCafesError);
-    }
-  }, [allCafes, allCafesLoading, allCafesError, sortBy, searchQuery, searchLocation, activeFilters]);
 
   const handleSearch = (query: string, location: string) => {
     // Update URL params
@@ -138,7 +136,7 @@ const CafeListPage: React.FC = () => {
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSortBy = e.target.value;
     setSortBy(newSortBy);
-    setFilteredCafes(sortCafes(filteredCafes, newSortBy));
+    setFilteredCafes(sortCafes(displayedCafes, newSortBy));
   };
 
   const toggleFilters = () => {
@@ -150,6 +148,7 @@ const CafeListPage: React.FC = () => {
 
   const clearAllFilters = () => {
     setActiveFilters({});
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetches data on mount
     setFilteredCafes(sortCafes(allCafes, sortBy));
     router.push(`/cafes`);
   };
@@ -243,11 +242,11 @@ const CafeListPage: React.FC = () => {
               <span>Semua lokasi</span>
             )}
             <span className="mx-2">•</span>
-            <span>{filteredCafes.length} warkop ditemukan</span>
+            <span>{displayedCafes.length} warkop ditemukan</span>
           </div>
           
           {/* Loading State */}
-          {loading && (
+          {isLoading && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
@@ -263,9 +262,9 @@ const CafeListPage: React.FC = () => {
           )}
           
           {/* Error State */}
-          {error && (
+          {displayError && (
             <div className="text-center py-12">
-              <p className="text-red-600 text-lg mb-4">Error: {error}</p>
+              <p className="text-red-600 text-lg mb-4">Error: {displayError}</p>
               <button
                 onClick={() => performSearch(searchQuery, searchLocation)}
                 className="text-amber-600 hover:text-amber-800"
@@ -276,12 +275,12 @@ const CafeListPage: React.FC = () => {
           )}
           
           {/* Café List */}
-          {!loading && !error && (
+          {!isLoading && !displayError && (
             <>
               {viewMode === 'list' ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredCafes.length > 0 ? (
-                    filteredCafes.map(cafe => (
+                  {displayedCafes.length > 0 ? (
+                    displayedCafes.map(cafe => (
                       <CafeCard key={cafe.id} cafe={cafe} />
                     ))
                   ) : (

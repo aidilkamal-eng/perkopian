@@ -29,6 +29,7 @@ export function useReviews(cafeId: string) {
 
   useEffect(() => {
     if (cafeId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- fetches data on mount
       loadReviews();
     }
   }, [cafeId]);
@@ -166,6 +167,7 @@ export function useUserReviews(userId: string) {
 
   useEffect(() => {
     if (userId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- fetches data on mount
       loadUserReviews();
     }
   }, [userId]);
