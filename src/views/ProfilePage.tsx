@@ -11,6 +11,8 @@ import CafeCard from '../components/CafeCard';
 import { useBookmarks } from "../hooks/useBookmarks";
 import { useAuth } from '../hooks/useAuth';
 import { useUserReviews } from '../hooks/useReviews';
+import { getErrorMessage } from '../lib/errors';
+import { Review } from '../types';
 
 
 const ProfilePage: React.FC = () => {
@@ -52,9 +54,9 @@ const ProfilePage: React.FC = () => {
         location: formData.location,
       });
       setSuccessMessage('Profil berhasil diperbarui');
-    } catch (err: any) {
+    } catch (err) {
       console.error('Profile update error:', err);
-      setError(err.message || 'Gagal memperbarui profil');
+      setError(getErrorMessage(err) || 'Gagal memperbarui profil');
     } finally {
       setIsUpdating(false);
     }
@@ -86,9 +88,9 @@ const ProfilePage: React.FC = () => {
         newPassword: '',
         confirmPassword: ''
       }));
-    } catch (err: any) {
+    } catch (err) {
       console.error('Password update error:', err);
-      setError(err.message || 'Gagal memperbarui password');
+      setError(getErrorMessage(err) || 'Gagal memperbarui password');
     } finally {
       setIsUpdating(false);
     }
@@ -97,23 +99,11 @@ const ProfilePage: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logout();
-    } catch (err: any) {
+    } catch (err) {
       console.error('Logout error:', err);
       setError('Gagal logout');
     }
   };
-
-  // Update form data when user data changes
-  React.useEffect(() => {
-    if (user) {
-      setFormData(prev => ({
-        ...prev,
-        name: user.name || '',
-        bio: user.bio || '',
-        location: user.location || '',
-      }));
-    }
-  }, [user]);
   
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -391,7 +381,7 @@ function UserReviewsSection({
   userReviews,
   reviewsLoading,
 }: {
-  userReviews: any[],
+  userReviews: Review[],
   reviewsLoading: boolean
 }) {
   return (

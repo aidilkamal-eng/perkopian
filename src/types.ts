@@ -19,6 +19,14 @@ export interface Cafe {
   updatedAt: string;
 }
 
+export interface CafeFilters {
+  wifiQuality: number;
+  powerOutlets: number;
+  noiseLevel: number;
+  priceLevel: string;
+  comfort: number;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -104,7 +112,19 @@ export function supabaseCafeToLocal(cafe: SupabaseCafe): Cafe {
   };
 }
 
-export function supabaseReviewToLocal(review: any, user: any): Review {
+export interface SupabaseProfile {
+  name: string | null;
+  avatar_url: string | null;
+}
+
+export type SupabaseReviewWithJoins = SupabaseReview & {
+  cafes?: { name: string } | null;
+};
+
+export function supabaseReviewToLocal(
+  review: SupabaseReviewWithJoins, 
+  user: SupabaseProfile | null
+): Review {
   return {
     id: review.id,
     cafeId: review.cafe_id || '',

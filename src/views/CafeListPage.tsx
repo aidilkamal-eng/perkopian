@@ -9,7 +9,7 @@ import CafeCard from '../components/CafeCard';
 import { useCafes } from '../hooks/useCafes';
 import { cafeService } from '../services/cafeService';
 import { supabaseCafeToLocal } from '../types';
-import type { Cafe } from '../types';
+import type { Cafe, CafeFilters } from '../types';
 
 const CafeListPage: React.FC = () => {
   const searchParams = useSearchParams();
@@ -21,33 +21,64 @@ const CafeListPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [searchLocation, setSearchLocation] = useState(searchParams.get('location') || '');
+  const searchQuery = useSearchParams().get('q') || '';
+  const searchLocation = useSearchParams().get('location') || '';
   const [showFilters, setShowFilters] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<any>({});
+  const [activeFilters, setActiveFilters] = useState<Partial<CafeFilters>>({});
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [sortBy, setSortBy] = useState<string>('rating');
 
-  // Initialize search from URL params
-  useEffect(() => {
-    const query = searchParams.get('q') || '';
-    const location = searchParams.get('location') || '';
-    setSearchQuery(query);
-    setSearchLocation(location);
+  const applyFilters = (cafes: Cafe[], filters: Partial<CafeFilters>): Cafe[] => {
+    let results = [...cafes];
     
-    if (query || location) {
-      performSearch(query, location);
+    if ((filters.wifiQuality ?? 0) > 0) {
+      results = results.filter(cafe => cafe.wifiRating >= filters.wifiQuality!);
     }
-  }, [searchParams]);
+    
+    if (filters.powerOutlets && filters.powerOutlets > 0) {
+      results = results.filter(cafe => cafe.powerOutlets >= filters.powerOutlets!);
+    }
+    
+    if ((filters.noiseLevel ?? 0) > 0) {
+      results = results.filter(cafe => {
+        if (filters.noiseLevel === 1) return cafe.noiseLevel <= 2;
+        if (filters.noiseLevel === 2) return cafe.noiseLevel > 2 && cafe.noiseLevel <= 3.5;
+        if (filters.noiseLevel === 3) return cafe.noiseLevel > 3.5;
+        return true;
+      });
+    }
+    
+    if (filters.priceLevel) {
+      results = results.filter(cafe => cafe.priceLevel === filters.priceLevel);
+    }
+    
+    if ((filters.comfort ?? 0) > 0) {
+      results = results.filter(cafe => cafe.comfort >= filters.comfort!);
+    }
+    
+    return results;
+  };
 
-  // Use all cafes when no search/filters are active
-  useEffect(() => {
-    if (!searchQuery && !searchLocation && Object.keys(activeFilters).length === 0) {
-      setFilteredCafes(sortCafes(allCafes, sortBy));
-      setLoading(allCafesLoading);
-      setError(allCafesError);
+  const sortCafes = (cafesToSort: Cafe[], sortOption: string) => {
+    switch (sortOption) {
+      case 'rating':
+        return [...cafesToSort].sort((a, b) => b.overallRating - a.overallRating);
+      case 'wifi':
+        return [...cafesToSort].sort((a, b) => b.wifiRating - a.wifiRating);
+      case 'newest':
+        return [...cafesToSort].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      case 'popular':
+        return [...cafesToSort].sort((a, b) => b.reviewCount - a.reviewCount);
+      default:
+        return cafesToSort;
     }
-  }, [allCafes, allCafesLoading, allCafesError, sortBy, searchQuery, searchLocation, activeFilters]);
+  };
+
+  const hasSearchOrFilters = Boolean(searchQuery || searchLocation || Object.keys(activeFilters).length > 0);
+
+  const displayedCafes = hasSearchOrFilters ? filteredCafes : sortCafes(allCafes, sortBy);
+  const isLoading = hasSearchOrFilters ? loading : allCafesLoading;
+  const displayError = hasSearchOrFilters ? error : allCafesError;
 
   const performSearch = async (query: string, location: string, filters = activeFilters) => {
     try {
@@ -78,51 +109,23 @@ const CafeListPage: React.FC = () => {
     }
   };
 
-  const applyFilters = (cafes: Cafe[], filters: any): Cafe[] => {
-    let results = [...cafes];
-    
-    if (filters.wifiQuality > 0) {
-      results = results.filter(cafe => cafe.wifiRating >= filters.wifiQuality);
+  // Initialize search from URL params
+  useEffect(() => {
+    if (searchQuery || searchLocation) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- fetches data on mount
+      performSearch(searchQuery, searchLocation);
     }
-    
-    if (filters.powerOutlets && filters.powerOutlets > 0) {
-      results = results.filter(cafe => cafe.powerOutlets >= filters.powerOutlets);
-    }
-    
-    if (filters.noiseLevel > 0) {
-      results = results.filter(cafe => {
-        if (filters.noiseLevel === 1) return cafe.noiseLevel <= 2;
-        if (filters.noiseLevel === 2) return cafe.noiseLevel > 2 && cafe.noiseLevel <= 3.5;
-        if (filters.noiseLevel === 3) return cafe.noiseLevel > 3.5;
-        return true;
-      });
-    }
-    
-    if (filters.priceLevel) {
-      results = results.filter(cafe => cafe.priceLevel === filters.priceLevel);
-    }
-    
-    if (filters.comfort > 0) {
-      results = results.filter(cafe => cafe.comfort >= filters.comfort);
-    }
-    
-    return results;
-  };
+  }, [searchQuery, searchLocation]);
 
   const handleSearch = (query: string, location: string) => {
-    setSearchQuery(query);
-    setSearchLocation(location);
-    
     // Update URL params
     const params = new URLSearchParams();
     if (query) params.set('q', query);
     if (location) params.set('location', location);
     router.replace(`/cafes?${params.toString()}`);
-    
-    performSearch(query, location);
   };
 
-  const handleFilterChange = (filters: any) => {
+  const handleFilterChange = (filters: CafeFilters) => {
     setActiveFilters(filters);
     console.log("Received filters:", filters);
     
@@ -130,47 +133,27 @@ const CafeListPage: React.FC = () => {
     performSearch(searchQuery, searchLocation, filters);
   };
 
-  const sortCafes = (cafesToSort: Cafe[], sortOption: string) => {
-    switch (sortOption) {
-      case 'rating':
-        return [...cafesToSort].sort((a, b) => b.overallRating - a.overallRating);
-      case 'wifi':
-        return [...cafesToSort].sort((a, b) => b.wifiRating - a.wifiRating);
-      case 'newest':
-        return [...cafesToSort].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      case 'popular':
-        return [...cafesToSort].sort((a, b) => b.reviewCount - a.reviewCount);
-      default:
-        return cafesToSort;
-    }
-  };
-
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSortBy = e.target.value;
     setSortBy(newSortBy);
-    setFilteredCafes(sortCafes(filteredCafes, newSortBy));
+    setFilteredCafes(sortCafes(displayedCafes, newSortBy));
   };
 
   const toggleFilters = () => {
     setShowFilters(!showFilters);
   };
 
-  const hasActiveFilters = () => {
-    return Object.values(activeFilters).some(value => {
-      if (typeof value === 'boolean') return value;
-      if (typeof value === 'number') return value > 0;
-      if (typeof value === 'string') return value !== '';
-      return false;
-    });
-  };
+  const isFilterSet = (v: string | number | undefined) =>
+    v !== undefined && v !== 0 && v !== '';
 
   const clearAllFilters = () => {
-    setSearchQuery('');
-    setSearchLocation('');
     setActiveFilters({});
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetches data on mount
     setFilteredCafes(sortCafes(allCafes, sortBy));
     router.push(`/cafes`);
   };
+
+  const activeCount = Object.values(activeFilters).filter(isFilterSet).length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -205,14 +188,14 @@ const CafeListPage: React.FC = () => {
                 
                 <div className="md:hidden">
                   <button
-                    className={`p-2 rounded-md flex items-center ${hasActiveFilters() ? 'bg-amber-100 text-amber-800' : 'text-gray-500 hover:bg-gray-100'}`}
+                    className={`p-2 rounded-md flex items-center ${activeCount > 0 ? 'bg-amber-100 text-amber-800' : 'text-gray-500 hover:bg-gray-100'}`}
                     onClick={toggleFilters}
                   >
                     <SlidersHorizontal className="h-5 w-5 mr-1" />
                     Filter
-                    {hasActiveFilters() && (
+                    {activeCount > 0 && (
                       <span className="ml-1 bg-amber-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                        {Object.values(activeFilters).filter(v => v !== 0 && v !== '' && v !== false).length}
+                        {activeCount}
                       </span>
                     )}
                   </button>
@@ -259,11 +242,11 @@ const CafeListPage: React.FC = () => {
               <span>Semua lokasi</span>
             )}
             <span className="mx-2">•</span>
-            <span>{filteredCafes.length} warkop ditemukan</span>
+            <span>{displayedCafes.length} warkop ditemukan</span>
           </div>
           
           {/* Loading State */}
-          {loading && (
+          {isLoading && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
@@ -279,9 +262,9 @@ const CafeListPage: React.FC = () => {
           )}
           
           {/* Error State */}
-          {error && (
+          {displayError && (
             <div className="text-center py-12">
-              <p className="text-red-600 text-lg mb-4">Error: {error}</p>
+              <p className="text-red-600 text-lg mb-4">Error: {displayError}</p>
               <button
                 onClick={() => performSearch(searchQuery, searchLocation)}
                 className="text-amber-600 hover:text-amber-800"
@@ -292,12 +275,12 @@ const CafeListPage: React.FC = () => {
           )}
           
           {/* Café List */}
-          {!loading && !error && (
+          {!isLoading && !displayError && (
             <>
               {viewMode === 'list' ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredCafes.length > 0 ? (
-                    filteredCafes.map(cafe => (
+                  {displayedCafes.length > 0 ? (
+                    displayedCafes.map(cafe => (
                       <CafeCard key={cafe.id} cafe={cafe} />
                     ))
                   ) : (

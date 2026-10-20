@@ -10,12 +10,6 @@ export function useReviews(cafeId: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (cafeId) {
-      loadReviews();
-    }
-  }, [cafeId]);
-
   const loadReviews = async () => {
     try {
       setLoading(true);
@@ -32,6 +26,13 @@ export function useReviews(cafeId: string) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (cafeId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- fetches data on mount
+      loadReviews();
+    }
+  }, [cafeId]);
 
   const checkUserReview = async (userId: string) => {
     try {
@@ -147,12 +148,6 @@ export function useUserReviews(userId: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (userId) {
-      loadUserReviews();
-    }
-  }, [userId]);
-
   const loadUserReviews = async () => {
     try {
       setLoading(true);
@@ -169,6 +164,13 @@ export function useUserReviews(userId: string) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (userId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- fetches data on mount
+      loadUserReviews();
+    }
+  }, [userId]);
 
   return {
     reviews,
