@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
           <div className="text-center max-w-3xl mx-auto">
             <Coffee className="h-16 w-16 mx-auto mb-6 text-amber-300" />
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Temukan warkop terbaikmu untuk nongkrong, wfc, mabar, dll.</h1>
+            <h1 className="text-4xl md:text-5xl font-heading mb-6">Temukan warkop terbaikmu untuk nongkrong, wfc, mabar, dll.</h1>
             <p className="text-xl mb-8">Cari warkop dengan Wifi kencang, soket listrik, maupun vibe yang nyaman buat kamu fokus selesaikan tugas.</p>
             
             <div className="mb-8">
