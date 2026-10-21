@@ -12,6 +12,8 @@ const HomePage: React.FC = () => {
   const router = useRouter();
   const { cafes, loading, error } = useCafes();
 
+  const heroChips = ['Warkop Rating Teratas', 'Suasana Tenang', 'Wifi Kencang'];
+
   const handleSearch = (query: string, location: string) => { 
     // Navigate to cafes page with search parameters
     const params = new URLSearchParams();
@@ -29,34 +31,44 @@ const HomePage: React.FC = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-amber-800 text-white">
-        <div className="absolute inset-0 overflow-hidden">
+      <section className="relative min-h-[70vh] flex items-center text-white">
+        <div className="absolute inset-0">
           <img 
-            src="https://images.pexels.com/photos/1813466/pexels-photo-1813466.jpeg" 
+            src="/hero-cafe-background.png" 
             alt="Café background" 
-            className="w-full h-full object-cover opacity-30"
+            className="w-full h-full object-cover"
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-espresso/90 via-espresso/50 to-transparent"/>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-          <div className="text-center max-w-3xl mx-auto">
-            <Coffee className="h-16 w-16 mx-auto mb-6 text-amber-300" />
-            <h1 className="text-4xl md:text-5xl font-heading mb-6">Temukan warkop terbaikmu untuk nongkrong, wfc, mabar, dll.</h1>
-            <p className="text-xl mb-8">Cari warkop dengan Wifi kencang, soket listrik, maupun vibe yang nyaman buat kamu fokus selesaikan tugas.</p>
-            
-            <div className="mb-8">
-              <SearchBar onSearch={handleSearch} />
-            </div>
-            
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <Link href="/cafes" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm transition-colors">
-                Warkop Rating Teratas
-              </Link>
-              <Link href="/cafes" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm transition-colors">
-                Suasana Tenang
-              </Link>
-              <Link href="/cafes" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm transition-colors">
-                Wifi Kencang
-              </Link>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          {/* Left-aligned text block */}
+          <div className="max-w-2xl lg:pl-12">
+            <p className="text-xs tracking-[0.3em] uppercase font-sub-heading text-amber-400 mb-4">Temukan</p>
+
+            <h1 className="font-heading text-5xl md:text-6xl leading-tight mb-6">
+              Warkop yang Pas untuk Kerja, Ngopi, dan Berkarya
+            </h1>
+
+            <p className="font-body text-base md:text-lg text-white/90 max-w-xl leading-relaxed">
+              Cari warkop ramah kerja (WFC) di sekitarmu, lengkap dengan ulasan, fasilitas, dan suasana yang cocok untuk produktivitas.
+            </p>
+          </div>
+
+          {/* Centered search + chips */}
+          <div className="mt-10 flex flex-col items-center">
+            <SearchBar onSearch={handleSearch} variant="hero"/>
+
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
+              {heroChips.map((chip) => (
+                <Link
+                  key={chip}
+                  href="/cafes"
+                  className="border border-white/40 rounded-full px-4 py-1.5 text-xs font-body hover:bg-white/10 transition-colors"
+                >
+                  {chip}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
