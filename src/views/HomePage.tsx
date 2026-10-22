@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search, Wifi, Users, Heart, ArrowRight } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
-import CafeCard from '../components/CafeCard';
+import FeaturedCafeCard from '../components/FeaturedCafeCard';
 import { useCafes } from '../hooks/useCafes';
 
 const HomePage: React.FC = () => {
@@ -110,24 +110,31 @@ const HomePage: React.FC = () => {
       </section>
       
       {/* Featured Cafés Section */}
-      <section className="py-16 bg-amber-50">
+      <section className="py-20 bg-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Warkop Rating Tertinggi</h2>
-            <Link href="/cafes" className="text-amber-600 hover:text-amber-800 flex items-center">
-              Lihat Selengkapnya <ArrowRight className="h-4 w-4 ml-1" />
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <p className="text-xs tracking-[0.3em] uppercase font-sub-heading text-amber-900 mb-3">
+                Warkop Pilihan
+              </p>
+              <h2 className="font-heading text-3xl md:text-4xl text-espresso">
+                Tempat Favorit untuk Bekerja
+              </h2>
+            </div>
+            <Link href="/cafes" className="font-body text-sm text-caramel hover:text-espresso flex items-center transition-colors">
+              Lihat Semua <ArrowRight className="h-4 w-4 ml-1" />
             </Link>
           </div>
-          
+
           {loading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
-                  <div className="h-48 bg-gray-200"></div>
+                <div key={i} className="bg-cream-light rounded-xl shadow-sm overflow-hidden animate-pulse">
+                  <div className="h-40 bg-cream-dark"></div>
                   <div className="p-4">
-                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                    <div className="h-4 bg-cream-dark rounded mb-2"></div>
+                    <div className="h-3 bg-cream-dark rounded mb-2"></div>
+                    <div className="h-3 bg-cream-dark rounded mb-2/3"></div>
                   </div>
                 </div>
               ))}
@@ -135,21 +142,25 @@ const HomePage: React.FC = () => {
           ) : error ? (
             <div className="text-center py-8">
               <p className="text-red-600 mb-4">Error loading cafes: {error}</p>
-              <button 
+              <button
                 onClick={() => window.location.reload()}
-                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md"
+                className="bg-caramel hover:bg-caramel/90 text-white px-4 py-2 rounded-md"
               >
                 Try Again
               </button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {topRatedCafes.map(cafe => (
-                <CafeCard key={cafe.id} cafe={cafe} />
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {topRatedCafes.map((cafe, index) => (
+                <FeaturedCafeCard
+                  key={cafe.id}
+                  cafe={cafe}
+                  badge={index === 0 ? 'Rekomendasi' : undefined}
+                />
               ))}
             </div>
           )}
-        </div>
+        </div> 
       </section>
       
       {/* CTA Section */}
