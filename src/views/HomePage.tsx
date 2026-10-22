@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Coffee, Search, Star, ArrowRight } from 'lucide-react';
+import { Search, Wifi, Users, Heart, ArrowRight } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import CafeCard from '../components/CafeCard';
 import { useCafes } from '../hooks/useCafes';
@@ -13,6 +13,12 @@ const HomePage: React.FC = () => {
   const { cafes, loading, error } = useCafes();
 
   const heroChips = ['Warkop Rating Teratas', 'Suasana Tenang', 'Wifi Kencang'];
+  const features = [
+    { icon: Search, title: 'Mudah Dicari', desc: 'Temukan warkop terbaik di lokasimu dengan cepat.' },
+    { icon: Wifi, title: 'Info Lengkap', desc: 'Lihat fasilitas, suasana, harga, dan ulasan pengguna.' },
+    { icon: Users, title: 'Komunitas Aktif', desc: 'Bergabung dengan sesama remote worker, berbagi tips, dan temukan teman baru.' },
+    { icon: Heart, title: 'Dukung Lokal', desc: 'Bantu warkop favorit di sekitarmu untuk terus tumbuh.' },
+  ];
 
   const handleSearch = (query: string, location: string) => { 
     // Navigate to cafes page with search parameters
@@ -74,38 +80,31 @@ const HomePage: React.FC = () => {
         </div>
       </section>
       
-      {/* How It Works Section */}
-      <section className="py-16 bg-white">
+      {/* Why Perkopian Section */}
+      <section className="py-20 bg-cream-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Mengenali Perkopian</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">Cari warkop yang tepat untuk nongkrong maupun kerja dalam 3 langkah mudah.</p>
+          <div className="text-center mb-14">
+            <p className="text-xs tracking-[0.3em] uppercase font-sub-heading text-amber-900 mb-3">
+              Kenapa Perkopian?
+            </p>
+            <h2 className="font-heading text-3xl md:text-4xl text-espresso mb-4">
+              Lebih dari Sekadar Daftar Warkop
+            </h2>
+            <p className="font-body text-gray-500 text-sm max-w-xl mx-auto leading-relaxed">
+              Perkopian hadir untuk membantu kamu menemukan tempat kerja yang nyaman, sekaligus menjadi bagian dari komunitas pekerja jarak jauh di sekitarmu.
+            </p>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="h-8 w-8 text-amber-600" />
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-y-10 lg:gap-y-0 lg:divide-x lg:divide-caramel/15">
+            {features.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="text-center px-6">
+                <div className="bg-cream-dark w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5">
+                  <Icon className="h-7 w-7 text-amber-700"/>
+                </div>
+                <h3 className="font-heading text-xl text-gray-800 mb-2">{title}</h3>
+                <p className="font-body text-sm text-gray-500 leading-relaxed">{desc}</p>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Cari & Filter</h3>
-              <p className="text-gray-600">Cari warkop berdasarkan lokasi, kualitas WiFi, kesunyian, dan lainnya.</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star className="h-8 w-8 text-amber-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Baca Review</h3>
-              <p className="text-gray-600">Lihat review dan rating yang detail dari pengguna lain.</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Coffee className="h-8 w-8 text-amber-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Kunjungi & Review</h3>
-              <p className="text-gray-600">Kunjungi warkop, nongkrong atau kerjakan tugas, dan bagikan pengalamanmu.</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
