@@ -9,8 +9,10 @@ export default {
         body: ['var(--font-body)', 'sans-serif'],
       },
       colors: {
-        cream: '#F9F1E5',
-        espresso: '#3B2010',
+        cream: '#F7EAD7',
+        'cream-light': '#F9F1E5',
+        'cream-dark': '#FCE5BF',
+        espresso: '#45231A',
         caramel: '#B85B19'
       },
     },
