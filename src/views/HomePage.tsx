@@ -31,7 +31,7 @@ const HomePage: React.FC = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center text-white">
+      <section className="relative min-h-[80vh] flex items-center pt-16 text-white">
         <div className="absolute inset-0">
           <img 
             src="/hero-cafe-background.png" 
