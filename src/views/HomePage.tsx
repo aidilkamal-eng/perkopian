@@ -163,18 +163,63 @@ const HomePage: React.FC = () => {
         </div> 
       </section>
       
-      {/* CTA Section */}
-      <section className="py-16 bg-amber-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Tahu Warkop yang Bagus?</h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">Bantu komunitas dengan bergabung dan membagikan pengalaman pada warkop favoritmu.</p>
-          <Link 
-            href="/signup" 
-            className="inline-block bg-white text-amber-600 hover:bg-amber-100 px-6 py-3 rounded-lg font-medium text-lg transition-colors"
-          >
-            Join Perkopian
-          </Link>
-        </div>
+      {/* Community Section */}
+      <section className="relative overflow-hidden text-white">
+          <div className="absolute inset-0">
+            <img src="/community-banner.png" alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-r from-espresso/50 via-caramel/70 to-caramel-dark"/>
+          </div>
+
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+            <div className="grid lg:grid-cols-5 gap-10 items-center">
+              {/* Empty spacer so the photo shows on the left on desktop */}
+              <div className="hidden lg:block lg:col-span-2"/>
+
+              <div className="lg:col-span-3 flex flex-col md:flex-row md:items-center md:justify-between gap-10">
+                <div className="max-w-md">
+                  <p className="text-xs tracking-[0.3em] uppercase font-sub-heading text-white mb-3">
+                    Komunitas
+                  </p>
+                  <h2 className="font-heading text-3xl md:text-4xl leading-tight mb-4">
+                    Jadi Bagian dari Perkopian Community
+                  </h2>
+                  <p className="font-body text-white/90 leading-relaxed mb-8">
+                    Dapatkan rekomendasi, bagikan pengalaman, dan temukan teman kerja baru di warkop favoritmu.
+                  </p>
+                  <Link
+                    href="/signup"
+                    className="inline-flex items-center bg-cream-light text-caramel hover:bg-white px-5 py-2.5 rounded-md text-sm font-body font-medium transition-colors"
+                  >
+                    Gabung Sekarang <ArrowRight className="h-4 w-4 ml-2"/>
+                  </Link>
+                </div>
+
+                {/* Handwritten note + avatars */}
+                <div className="hidden md:flex flex-col items-center">
+                  <p className="font-handwriting text-2xl leading-tight -rotate-6 text-amber-300 mb-3">
+                    Work better<br />together
+                  </p>
+                  <div className="flex items-center -space-x-2">
+                    {[1, 2, 3].map((n, index) => (
+                      <img
+                        key={n}
+                        src="/disposable-coffee-paper-cup-icon.png"
+                        alt=""
+                        className="relative h-9 w-9 rounded-full border-2 border-amber-200 bg-cream object-cover"
+                        style={{ zIndex: 10 - index }}
+                      />
+                    ))}
+                    <span 
+                      className="h-9 w-9 rounded-full border-2 border-amber-200 bg-transparent text-amber-200 text-sm flex items-center justify-center"
+                      style={{ zIndex: 0 }} 
+                    >
+                      +
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
       </section>
     </div>
   );
