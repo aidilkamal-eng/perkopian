@@ -58,7 +58,7 @@ export const reviewService = {
   },
 
   // Get reviews by user
-  async getReviewsByUserId(userId: string): Promise<(ReviewWithUser & { cafes: { name: string } })[]> {
+  async getReviewsByUserId(userId: string): Promise<(ReviewWithUser & { cafes: { name: string } | null })[]> {
     const { data, error } = await supabase
       .from('reviews')
       .select(`
@@ -136,9 +136,10 @@ export const reviewService = {
       throw fetchError;
     }
 
+    const current = review.helpful_count ?? 0;
     const newCount = increment 
-      ? review.helpful_count + 1 
-      : Math.max(0, review.helpful_count - 1);
+      ? current + 1 
+      : Math.max(0, current - 1);
 
     const { error } = await supabase
       .from('reviews')
