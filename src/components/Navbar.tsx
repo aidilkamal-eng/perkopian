@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Coffee, Menu, X, Search, MapPin, User, LogOut } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import ConfirmDialog from './ConfirmDialog';
@@ -14,6 +14,14 @@ const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const router = useRouter();
+
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+  const isTransparent = isHome && !isMenuOpen;
+
+  const linkStyle = isTransparent
+    ? 'text-white/90 hover:text-white'
+    : 'text-gray-700 hover:text-amber-600';
 
   const handleLogout = async () => {
     try {
@@ -32,29 +40,39 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md relative">
+    <nav 
+      className={`w-full z-30 transition-colors ${
+        isHome ? 'absolute top-0 left-0' : 'relative'
+      } ${isTransparent ? 'bg-transparent' : 'bg-white shadow-md'}`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <Coffee className="h-8 w-8 text-amber-600" />
-              <span className="ml-2 text-xl font-bold text-amber-800">Perkopian</span>
+              <Coffee className={`h-8 w-8 ${isTransparent ? 'text-amber-300' : 'text-amber-600'}`} />
+              <span 
+                className={`ml-2 text-2xl font-heading ${
+                  isTransparent ? 'text-amber-300' : 'text-amber-600'
+                }`}
+              >
+                Perkopian
+              </span>
             </Link>
           </div>
           
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             <Link href="/cafes" className="text-gray-700 hover:text-amber-600 p-1" title="Cari Warkop">
-              <Search className="h-5 w-5" />
+              <Search className={`${linkStyle} p-1`} />
             </Link>
             <Link href="/cafes" className="text-gray-700 hover:text-amber-600 p-1" title="Lokasi">
-              <MapPin className="h-5 w-5" />
+              <MapPin className={`${linkStyle} p-1`} />
             </Link>
             
             {isAuthenticated ? (
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center text-gray-700 hover:text-amber-600 p-1"
+                  className={`flex items-center ${linkStyle} p-1`}
                 >
                   <img 
                     src={user?.avatar_url || '/disposable-coffee-paper-cup-icon.png'} 
@@ -90,13 +108,13 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Link 
                   href="/login" 
-                  className="text-gray-700 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium"
+                  className={`${linkStyle} px-3 py-2 rounded-md text-sm font-medium`}
                 >
                   Masuk
                 </Link>
                 <Link 
                   href="/signup" 
-                  className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="bg-caramel hover:bg-caramel/90 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Daftar
                 </Link>
@@ -107,7 +125,9 @@ const Navbar: React.FC = () => {
           <div className="flex items-center sm:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-amber-600 hover:bg-amber-50 focus:outline-none"
+              className={`inline-flex items-center justify-center p-2 rounded-md focus:outline-none ${
+                isTransparent ? 'text-white hover:bg-white/10' : 'text-gray-700 hover:text-amber-600 hover:bg-amber-50'
+              }`}
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>

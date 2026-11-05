@@ -5,9 +5,11 @@ import { Search, MapPin, X } from 'lucide-react';
 
 interface SearchBarProps {
   onSearch: (query: string, location: string) => void;
+  variant?: 'default' | 'hero';
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, variant = 'default' }) => {
+  const isHero = variant === 'hero';
   const [query, setQuery] = useState('');
   const [location, setLocation] = useState('');
 
@@ -23,13 +25,19 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto">
-      <div className="flex flex-col md:flex-row shadow-lg rounded-lg overflow-hidden">
+    <form onSubmit={handleSubmit} className={`w-full ${isHero ? 'max-w-3xl mx-auto' : 'max-w-4xl mx-auto'}`}>
+      <div 
+        className={`flex flex-col md:flex-row rounded-lg overflow-hidden ${
+          isHero
+            ? 'ring-2 ring-amber-400 shadow-[0_0_24px_rgba(251,191,36,0.35)]'
+            : 'shadow-lg'
+        }`}
+      >
         <div className="flex-1 flex items-center bg-white px-4 py-3 border-b md:border-b-0 md:border-r border-gray-200">
           <Search className="h-5 w-5 text-gray-400 mr-2" />
           <input
             type="text"
-            placeholder="Cari warkop, fitur, atau tags..."
+            placeholder={isHero ? "Cari warkop, kota, atau nama tempat..." : "Cari warkop, fitur, atau tags..."}
             className="w-full focus:outline-none text-black"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -73,9 +81,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         
         <button
           type="submit"
-          className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 font-medium transition-colors"
+          className={`text-white px-6 py-3 font-medium transition-colors ${
+            isHero ? 'bg-caramel hover:bg-caramel/90' : 'bg-amber-600 hover:bg-amber-700'
+          }`}
         >
-          Search
+          {isHero ? 'Cari' : 'Search'}
         </button>
         
         {(query || location) && (
