@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
 
   const linkStyle = isTransparent
     ? 'text-white/90 hover:text-white'
-    : 'text-gray-700 hover:text-amber-600';
+    : 'text-espresso/80 hover:text-amber-600';
 
   const handleLogout = async () => {
     try {
@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
     <nav 
       className={`w-full z-30 transition-colors ${
         isHome ? 'absolute top-0 left-0' : 'relative'
-      } ${isTransparent ? 'bg-transparent' : 'bg-white shadow-md'}`}
+      } ${isTransparent ? 'bg-transparent' : 'bg-cream-light shadow-md'}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
@@ -61,10 +61,10 @@ const Navbar: React.FC = () => {
           </div>
           
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-            <Link href="/cafes" className="text-gray-700 hover:text-amber-600 p-1" title="Cari Warkop">
+            <Link href="/cafes" className="text-espresso/80 hover:text-amber-600 p-1" title="Cari Warkop">
               <Search className={`${linkStyle} p-1`} />
             </Link>
-            <Link href="/cafes" className="text-gray-700 hover:text-amber-600 p-1" title="Lokasi">
+            <Link href="/cafes" className="text-espresso/80 hover:text-amber-600 p-1" title="Lokasi">
               <MapPin className={`${linkStyle} p-1`} />
             </Link>
             
@@ -89,14 +89,14 @@ const Navbar: React.FC = () => {
                     </div>
                     <button
                       onClick={handleProfileClick}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-sm text-espresso/80 hover:bg-gray-100"
                     >
                       <User className="h-4 w-4 inline mr-2" />
                       Profil
                     </button>
                     <button
                       onClick={() => setShowLogoutDialog(true)}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-sm text-espresso/80 hover:bg-gray-100"
                     >
                       <LogOut className="h-4 w-4 inline mr-2" />
                       Logout
@@ -126,7 +126,7 @@ const Navbar: React.FC = () => {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`inline-flex items-center justify-center p-2 rounded-md focus:outline-none ${
-                isTransparent ? 'text-white hover:bg-white/10' : 'text-gray-700 hover:text-amber-600 hover:bg-amber-50'
+                isTransparent ? 'text-white hover:bg-white/10' : 'text-espresso/80 hover:text-amber-600 hover:bg-amber-50'
               }`}
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -141,14 +141,14 @@ const Navbar: React.FC = () => {
           <div className="pt-2 pb-3 space-y-1">
             <Link 
               href="/" 
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
+              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-espresso/80 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link 
               href="/cafes" 
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
+              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-espresso/80 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
               onClick={() => setIsMenuOpen(false)}
             >
               Cari Warkop
@@ -171,7 +171,7 @@ const Navbar: React.FC = () => {
                   <div className="mt-3 space-y-1">
                     <Link 
                       href="/profile" 
-                      className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
+                      className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-espresso/80 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Profil
@@ -181,7 +181,7 @@ const Navbar: React.FC = () => {
                         setShowLogoutDialog(true);
                         setIsMenuOpen(false);
                       }}
-                      className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
+                      className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-espresso/80 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
                     >
                       Logout
                     </button>
@@ -192,14 +192,14 @@ const Navbar: React.FC = () => {
               <>
                 <Link 
                   href="/login" 
-                  className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
+                  className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-espresso/80 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Masuk
                 </Link>
                 <Link 
                   href="/signup" 
-                  className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
+                  className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-espresso/80 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Daftar
