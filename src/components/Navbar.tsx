@@ -17,7 +17,10 @@ const Navbar: React.FC = () => {
 
   const pathname = usePathname();
   const isHome = pathname === '/';
+  const isLogin = pathname === '/login';
+  const isOverlay = isHome || isLogin;
   const isTransparent = isHome && !isMenuOpen;
+  const isTranslucent = isLogin && !isMenuOpen;
 
   const linkStyle = isTransparent
     ? 'text-white/90 hover:text-white'
@@ -42,8 +45,14 @@ const Navbar: React.FC = () => {
   return (
     <nav 
       className={`w-full z-30 transition-colors ${
-        isHome ? 'absolute top-0 left-0' : 'relative'
-      } ${isTransparent ? 'bg-transparent' : 'bg-cream-light shadow-md'}`}
+        isOverlay ? 'absolute top-0 left-0' : 'relative'
+      } ${
+        isTransparent
+          ? 'bg-transparent'
+          : isTranslucent
+            ? 'bg-cream/70 backdrop-blur-sm'
+            : 'bg-white shadow-md'
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">

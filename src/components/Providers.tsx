@@ -6,9 +6,12 @@ import { AuthProvider } from '@/src/context/AuthContext';
 import { useAuth } from '@/src/hooks/useAuth';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
+import { usePathname } from 'next/navigation';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const { loading } = useAuth();
+  const pathname = usePathname();
+  const hideFooter = pathname === '/login';
 
   if (loading) {
     return (
@@ -27,7 +30,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-grow">
             {children}
         </main>
-        <Footer />
+        {!hideFooter && <Footer />}
       </div>
     </>
   );
