@@ -11,7 +11,7 @@ import { usePathname } from 'next/navigation';
 function AppLayout({ children }: { children: React.ReactNode }) {
   const { loading } = useAuth();
   const pathname = usePathname();
-  const hideFooter = pathname === '/login';
+  const hideFooter = pathname === '/login' || pathname === '/signup';
 
   if (loading) {
     return (
