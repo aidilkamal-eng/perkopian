@@ -68,7 +68,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
   ];
 
   return (
-    <div className="bg-cream-light bg-[url('/filter-bg.png')] bg-[length:100%_100%] bg-no-repeat px-7 py-8">
+    <div className="bg-cream bg-[url('/filter-bg.png')] bg-[length:100%_100%] bg-no-repeat px-7 py-8">
       <div className="flex justify-between items-center border-b border-caramel/30 pb-3 mb-6">
         <h3 className="font-heading text-2xl text-espresso">Filter</h3>
         <button onClick={clearFilters} className="font-body text-sm text-caramel hover:text-espresso transition-colors">

@@ -15,7 +15,7 @@ const CafeCard: React.FC<CafeCardProps> = ({ cafe }) => {
 
   return (
     <Link href={`/cafes/${cafe.id}`} className="group block">
-      <div className="relative bg-cream-light bg-[url('/cafe-card-bg.webp')] bg-[length:100%_100%] bg-no-repeat px-3 py-7 transition-transform duration-200 group-hover:-translate-y-1">
+      <div className="relative bg-cream bg-[url('/cafe-card-bg.webp')] bg-[length:100%_100%] bg-no-repeat px-3 py-7 transition-transform duration-200 group-hover:-translate-y-1">
         <div className="h-40 overflow-hidden rounded-xl">
           <img
             src={cafe?.imageUrl || '/default_cafe_image.jpg'}
