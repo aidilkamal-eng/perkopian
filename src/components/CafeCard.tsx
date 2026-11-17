@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Wifi, Battery, VolumeX, Star } from 'lucide-react';
+import { Wifi, Battery, VolumeX, Star, MapPin,  ArrowRight } from 'lucide-react';
 import { Cafe } from '../types';
 
 interface CafeCardProps {
@@ -11,50 +11,56 @@ const safeToFixed = (value: number | null | undefined, digits: number = 1) =>
   typeof value === 'number' ? value.toFixed(digits) : 'N/A';
 
 const CafeCard: React.FC<CafeCardProps> = ({ cafe }) => {
+  const reviewCount = cafe.reviewCount ?? 0;
+
   return (
-    <Link href={`/cafes/${cafe.id}`} className="block">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-lg">
-        <div className="relative h-48 overflow-hidden">
-          <img 
-            src={cafe?.imageUrl || '/default_cafe_image.jpg'} 
-            alt={cafe.name} 
-            className="w-full h-full object-cover"
+    <Link href={`/cafes/${cafe.id}`} className="group block">
+      <div className="relative bg-cream bg-[url('/cafe-card-bg.webp')] bg-[length:100%_100%] bg-no-repeat px-3 py-7 transition-transform duration-200 group-hover:-translate-y-1">
+        <div className="h-40 overflow-hidden rounded-xl">
+          <img
+            src={cafe?.imageUrl || '/default_cafe_image.jpg'}
+            alt={cafe.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-            <h3 className="text-white font-bold text-xl">{cafe.name}</h3>
-            <p className="text-amber-200 text-sm">{cafe.neighborhood}</p>
-          </div>
         </div>
-        
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-3">
+
+        <div className="px-2 pt-3 pb-2">
+          <h3 className="font-heading text-xl text-espresso">{cafe.name}</h3>
+          <p className="flex items-center font-body text-xs text-espresso/70 mt-1">
+            <MapPin className="h-3 w-3 mr-1" />
+            {cafe.neighborhood || 'Lokasi belum tersedia'}
+          </p>
+
+          <div className="flex items-center justify-between font-body text-xs mt-3 pr-12">
             <div className="flex items-center">
-              <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
-              <span className="ml-1 font-bold">{safeToFixed(cafe.overallRating)}</span>
-              <span className="ml-1 text-gray-500 text-sm">({cafe.reviewCount ?? 0} review{(cafe.reviewCount ?? 0) === 1 ? '' : 's'})</span>
+              <Star className="h-4 w-4 text-caramel fill-caramel" />
+              <span className="ml-1 font-semibold text-espresso">{safeToFixed(cafe.overallRating)}</span>
+              <span className="ml-1 text-espresso/60">
+                ({reviewCount} review{reviewCount === 1 ? '' : 's'})
+              </span>
             </div>
-            <div className="text-sm text-gray-500">
-              {cafe.priceLevel || 'N/A'}
-            </div>
+            {cafe.priceLevel && <span className="text-espresso/60">{cafe.priceLevel}</span>}
           </div>
-          
-          <div className="flex space-x-4 mb-3">
+
+          <div className="flex space-x-4 font-body mt-3">
             <div className="flex items-center" title="WiFi Rating">
-              <Wifi className={`h-4 w-4 ${cafe.wifiRating >= 4 ? 'text-green-500' : cafe.wifiRating >= 3 ? 'text-amber-500' : 'text-red-500'}`} />
-              <span className="ml-1 text-xs">{safeToFixed(cafe.wifiRating)}</span>
+              <Wifi className="h-4 w-4 text-amber-500" />
+              <span className="ml-1 text-xs text-espresso/70">{safeToFixed(cafe.wifiRating)}</span>
             </div>
             <div className="flex items-center" title="Power Outlets">
-              <Battery className={`h-4 w-4 ${cafe.powerOutlets >= 4 ? 'text-green-500' : cafe.powerOutlets >= 3 ? 'text-amber-500' : 'text-red-500'}`} />
-              <span className="ml-1 text-xs">{safeToFixed(cafe.powerOutlets)}</span>
+              <Battery className="h-4 w-4 text-amber-500" />
+              <span className="ml-1 text-xs text-espresso/70">{safeToFixed(cafe.powerOutlets)}</span>
             </div>
             <div className="flex items-center" title="Noise Level">
-              <VolumeX className={`h-4 w-4 ${cafe.noiseLevel <= 2 ? 'text-green-500' : cafe.noiseLevel <= 3 ? 'text-amber-500' : 'text-red-500'}`} />
-              <span className="ml-1 text-xs">{safeToFixed(cafe.noiseLevel)}</span>
+              <VolumeX className="h-4 w-4 text-amber-500" />
+              <span className="ml-1 text-xs text-espresso/70">{safeToFixed(cafe.noiseLevel)}</span>
             </div>
           </div>
-          
-          <p className="text-gray-600 text-sm line-clamp-2">{cafe.description || 'Tidak ada deskripsi.'}</p>
         </div>
+
+        <span className="absolute bottom-5 right-5 h-9 w-9 rounded-full border border-caramel text-caramel flex items-center justify-center group-hover:bg-caramel group-hover:text-white transition-colors">
+          <ArrowRight className="h-4 w-4" />
+        </span>
       </div>
     </Link>
   );

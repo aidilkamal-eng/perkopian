@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { MapPin, List, Map as MapIcon, SlidersHorizontal, X } from 'lucide-react';
+import { MapPin, List, Map as MapIcon, SlidersHorizontal } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import FilterPanel from '../components/FilterPanel';
 import CafeCard from '../components/CafeCard';
@@ -12,7 +12,6 @@ import { supabaseCafeToLocal } from '../types';
 import type { Cafe, CafeFilters } from '../types';
 
 const CafeListPage: React.FC = () => {
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   const { cafes: allCafes, loading: allCafesLoading, error: allCafesError } = useCafes();
@@ -156,159 +155,163 @@ const CafeListPage: React.FC = () => {
   const activeCount = Object.values(activeFilters).filter(isFilterSet).length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Cari Warkop</h1>
-        <SearchBar onSearch={handleSearch} />
-      </div>
-      
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* Filters - Desktop */}
-        <div className="hidden md:block w-64 flex-shrink-0">
-          <FilterPanel onFilterChange={handleFilterChange} />
+    <div className="bg-cream">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {/* Header: title + search + sketch */}
+        <div className="mb-10 flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-10">
+          <div className="flex-shrink-0">
+            <h1 className="font-heading text-[53px] text-espresso">Cari Warkop</h1>
+            <img src="/title-line.webp" alt="" className="mt-3 w-[258px] h-auto" />
+          </div>
+
+          <div className="relative flex-1 lg:max-w-4xl lg:pr-44 lg:pb-1">
+            <SearchBar
+              onSearch={handleSearch}
+              variant="list"
+              initialQuery={searchQuery}
+              initialLocation={searchLocation}
+            />
+            <img
+              src="/cafe-sketch.webp"
+              alt=""
+              className="hidden lg:block absolute right-0 top-1/2 -translate-y-[65%] w-44 h-auto pointer-events-none"
+            />
+          </div>
         </div>
-        
-        {/* Main Content */}
-        <div className="flex-1">
-          <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center">
-                <button
-                  className={`mr-2 p-2 rounded-md ${viewMode === 'list' ? 'bg-amber-100 text-amber-800' : 'text-gray-500 hover:bg-gray-100'}`}
-                  onClick={() => setViewMode('list')}
-                >
-                  <List className="h-5 w-5" />
-                </button>
-                <button
-                  className={`mr-4 p-2 rounded-md ${viewMode === 'map' ? 'bg-amber-100 text-amber-800' : 'text-gray-500 hover:bg-gray-100'}`}
-                  onClick={() => setViewMode('map')}
-                >
-                  <MapIcon className="h-5 w-5" />
-                </button>
-                
-                <div className="md:hidden">
+
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          {/* Filters - Desktop */}
+          <div className="hidden md:block w-64 flex-shrink-0">
+            <FilterPanel onFilterChange={handleFilterChange} />
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 w-full">
+            {/* Sort bar: double border made with CSS */}
+            <div className="rounded-xl border-2 border-caramel/40 p-1 mb-5 bg-amber-100/40">
+              <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border-2 border-caramel/25 px-3 py-2">
+                <div className="flex items-center gap-2">
                   <button
-                    className={`p-2 rounded-md flex items-center ${activeCount > 0 ? 'bg-amber-100 text-amber-800' : 'text-gray-500 hover:bg-gray-100'}`}
+                    className={`p-2 rounded-md transition-colors ${viewMode === 'list' ? 'bg-caramel text-white' : 'bg-cream-dark text-espresso/70 hover:bg-caramel/20'}`}
+                    onClick={() => setViewMode('list')}
+                  >
+                    <List className="h-5 w-5" />
+                  </button>
+                  <button
+                    className={`p-2 rounded-md transition-colors ${viewMode === 'map' ? 'bg-caramel text-white' : 'bg-cream-dark text-espresso/70 hover:bg-caramel/20'}`}
+                    onClick={() => setViewMode('map')}
+                  >
+                    <MapIcon className="h-5 w-5" />
+                  </button>
+
+                  <button
+                    className={`md:hidden p-2 rounded-md flex items-center font-body text-sm transition-colors ${activeCount > 0 ? 'bg-caramel text-white' : 'bg-cream-dark text-espresso/70'}`}
                     onClick={toggleFilters}
                   >
                     <SlidersHorizontal className="h-5 w-5 mr-1" />
                     Filter
                     {activeCount > 0 && (
-                      <span className="ml-1 bg-amber-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                      <span className="ml-1 bg-white text-caramel rounded-full w-5 h-5 flex items-center justify-center text-xs">
                         {activeCount}
                       </span>
                     )}
                   </button>
                 </div>
-              </div>
-              
-              <div className="flex items-center">
-                <span className="text-sm text-gray-500 mr-2">Urutkan dari:</span>
-                <select
-                  value={sortBy}
-                  onChange={handleSortChange}
-                  className="border border-gray-300 rounded-md text-sm p-2 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                >
-                  <option value="rating">Rating Tertinggi</option>
-                  <option value="wifi">WiFi Terbaik</option>
-                  <option value="newest">Terbaru</option>
-                  <option value="popular">Paling Populer</option>
-                </select>
+
+                <div className="flex items-center">
+                  <span className="font-body text-sm text-espresso mr-2">Urutkan dari:</span>
+                  <select
+                    value={sortBy}
+                    onChange={handleSortChange}
+                    className="bg-cream-light border border-caramel/30 rounded-md font-body text-sm text-espresso p-2 focus:outline-none focus:ring-1 focus:ring-caramel"
+                  >
+                    <option value="rating">Rating Tertinggi</option>
+                    <option value="wifi">WiFi Terbaik</option>
+                    <option value="newest">Terbaru</option>
+                    <option value="popular">Paling Populer</option>
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
-          
-          {/* Mobile Filters */}
-          {showFilters && (
-            <div className="md:hidden mb-6">
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-bold text-gray-800">Filter</h3>
-                  <button onClick={toggleFilters}>
-                    <X className="h-5 w-5 text-gray-500" />
-                  </button>
-                </div>
+
+            {/* Mobile Filters */}
+            {showFilters && (
+              <div className="md:hidden mb-6">
                 <FilterPanel onFilterChange={handleFilterChange} />
               </div>
-            </div>
-          )}
-          
-          {/* Results Count */}
-          <div className="mb-4 flex items-center text-gray-600">
-            <MapPin className="h-4 w-4 mr-1" />
-            {searchLocation ? (
-              <span>{`Hasil dari "${searchLocation}"`}</span>
-            ) : (
-              <span>Semua lokasi</span>
             )}
-            <span className="mx-2">•</span>
-            <span>{displayedCafes.length} warkop ditemukan</span>
-          </div>
-          
-          {/* Loading State */}
-          {isLoading && (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
-                  <div className="h-48 bg-gray-200"></div>
-                  <div className="p-4">
-                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-2/3"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          
-          {/* Error State */}
-          {displayError && (
-            <div className="text-center py-12">
-              <p className="text-red-600 text-lg mb-4">Error: {displayError}</p>
-              <button
-                onClick={() => performSearch(searchQuery, searchLocation)}
-                className="text-amber-600 hover:text-amber-800"
-              >
-                Try Again
-              </button>
-            </div>
-          )}
-          
-          {/* Café List */}
-          {!isLoading && !displayError && (
-            <>
-              {viewMode === 'list' ? (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {displayedCafes.length > 0 ? (
-                    displayedCafes.map(cafe => (
-                      <CafeCard key={cafe.id} cafe={cafe} />
-                    ))
-                  ) : (
-                    <div className="col-span-full text-center py-12">
-                      <p className="text-gray-500 text-lg mb-4">
-                        {allCafes.length === 0 
-                          ? 'Tidak ada data warkop di database. Silakan tambahkan data warkop terlebih dahulu.'
-                          : 'Tidak ada warkop yang sesuai dengan kriteria.'
-                        }
-                      </p>
-                      {allCafes.length > 0 && (
-                        <button
-                          onClick={clearAllFilters}
-                          className="text-amber-600 hover:text-amber-800"
-                        >
-                          Hapus semua filter
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
+
+            {/* Results Count */}
+            <div className="mb-5 flex items-center font-body text-sm text-espresso">
+              <MapPin className="h-4 w-4 mr-1 text-caramel" />
+              {searchLocation ? (
+                <span>{`Hasil dari "${searchLocation}"`}</span>
               ) : (
-                <div className="bg-gray-200 rounded-lg h-96 flex items-center justify-center">
-                  <p className="text-gray-500">Map view coming soon!</p>
-                </div>
+                <span>Semua lokasi</span>
               )}
-            </>
-          )}
+              <span className="mx-2">•</span>
+              <span>{displayedCafes.length} warkop ditemukan</span>
+            </div>
+
+            {/* Loading State */}
+            {isLoading && (
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="bg-cream-light rounded-xl shadow-sm overflow-hidden animate-pulse">
+                    <div className="h-40 bg-cream-dark"></div>
+                    <div className="p-4">
+                      <div className="h-4 bg-cream-dark rounded mb-2"></div>
+                      <div className="h-3 bg-cream-dark rounded mb-2"></div>
+                      <div className="h-3 bg-cream-dark rounded w-2/3"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Error State */}
+            {displayError && (
+              <div className="text-center py-12">
+                <p className="text-red-600 text-lg mb-4">Error: {displayError}</p>
+                <button
+                  onClick={() => performSearch(searchQuery, searchLocation)}
+                  className="text-caramel hover:text-espresso"
+                >
+                  Try Again
+                </button>
+              </div>
+            )}
+
+            {/* Café List */}
+            {!isLoading && !displayError && (
+              <>
+                {viewMode === 'list' ? (
+                  <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {displayedCafes.length > 0 ? (
+                      displayedCafes.map((cafe) => <CafeCard key={cafe.id} cafe={cafe} />)
+                    ) : (
+                      <div className="col-span-full text-center py-12">
+                        <p className="font-body text-espresso/70 text-lg mb-4">
+                          {allCafes.length === 0
+                            ? 'Tidak ada data warkop di database. Silakan tambahkan data warkop terlebih dahulu.'
+                            : 'Tidak ada warkop yang sesuai dengan kriteria.'}
+                        </p>
+                        {allCafes.length > 0 && (
+                          <button onClick={clearAllFilters} className="text-caramel hover:text-espresso">
+                            Hapus semua filter
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-cream-dark rounded-lg h-96 flex items-center justify-center">
+                    <p className="font-body text-espresso/60">Map view coming soon!</p>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
