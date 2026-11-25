@@ -18,9 +18,10 @@ const Navbar: React.FC = () => {
   const pathname = usePathname();
   const isHome = pathname === '/';
   const isAuthPage = pathname === '/login' || pathname === '/signup';
+  const isCafePage = pathname.startsWith('/cafes');
   const isOverlay = isHome || isAuthPage;
   const isTransparent = isHome && !isMenuOpen;
-  const isTranslucent = isAuthPage && !isMenuOpen;
+  const isTranslucent = (isAuthPage || isCafePage) && !isMenuOpen;
 
   const linkStyle = isTransparent
     ? 'text-white/90 hover:text-white'
