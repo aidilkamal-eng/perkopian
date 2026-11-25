@@ -6,7 +6,7 @@ import { Star } from 'lucide-react';
 interface RatingStarsProps {
   rating: number;
   maxRating?: number;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   interactive?: boolean;
   onRatingChange?: (rating: number) => void;
 }
@@ -21,6 +21,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({
   const [hoverRating, setHoverRating] = React.useState(0);
 
   const starSizes = {
+    xs: 'h-3 w-3',
     sm: 'h-4 w-4',
     md: 'h-5 w-5',
     lg: 'h-6 w-6',
@@ -64,7 +65,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({
               className={`${starSizes[size]} ${
                 isFilled 
                   ? 'text-amber-500 fill-amber-500' 
-                  : 'text-gray-300'
+                  : 'text-caramel/25'
               }`} 
             />
           </span>
