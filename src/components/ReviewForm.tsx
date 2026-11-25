@@ -4,28 +4,24 @@ import React, { useState } from 'react';
 import { Star, Wifi, Battery, VolumeX, ThumbsUp } from 'lucide-react';
 import RatingStars from './RatingStars';
 
+interface ReviewData {
+  overallRating: number;
+  wifiRating: number;
+  powerOutlets: number;
+  noiseLevel: number;
+  comfort: number;
+  priceLevel: string;
+  comment: string;
+}
+
 interface ReviewFormProps {
-  initialData?: {
-    overallRating: number;
-    wifiRating: number;
-    powerOutlets: number;
-    noiseLevel: number;
-    comfort: number;
-    priceLevel: string;
-    comment: string;
-  };
+  initialData?: ReviewData;
   isEditing?: boolean;
-  onSubmit: (review: {
-    overallRating: number;
-    wifiRating: number;
-    powerOutlets: number;
-    noiseLevel: number;
-    comfort: number;
-    priceLevel: string;
-    comment: string;
-  }) => void;
+  onSubmit: (review: ReviewData) => void;
   onCancel: () => void;
 }
+
+const labelClass = 'flex items-center font-heading text-base text-espresso mb-2';
 
 const ReviewForm: React.FC<ReviewFormProps> = ({ initialData, isEditing = false, onSubmit, onCancel }) => {
   const [overallRating, setOverallRating] = useState(initialData?.overallRating || 0);
@@ -51,113 +47,69 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ initialData, isEditing = false,
       return;
     }
 
-    onSubmit({
-      overallRating,
-      wifiRating,
-      powerOutlets,
-      noiseLevel,
-      comfort,
-      priceLevel,
-      comment
-    });
+    onSubmit({ overallRating, wifiRating, powerOutlets, noiseLevel, comfort, priceLevel, comment });
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="p-3 bg-red-100 text-red-700 rounded-md">
-          {error}
-        </div>
+        <div className="rounded-md bg-red-100 p-3 font-body text-sm text-red-700">{error}</div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Rating Total *
-        </label>
-        <RatingStars
-          rating={overallRating}
-          size="lg"
-          interactive
-          onRatingChange={setOverallRating}
-        />
+        <label className={labelClass}>Rating Total *</label>
+        <RatingStars rating={overallRating} size="lg" interactive onRatingChange={setOverallRating} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <div className="flex items-center">
-              <Wifi className="h-4 w-4 mr-1" />
-              Kualitas WiFi
-            </div>
+          <label className={labelClass}>
+            <Wifi className="h-4 w-4 mr-2 text-espresso/70" />
+            Kualitas WiFi
           </label>
-          <RatingStars
-            rating={wifiRating}
-            interactive
-            onRatingChange={setWifiRating}
-          />
+          <RatingStars rating={wifiRating} interactive onRatingChange={setWifiRating} />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <div className="flex items-center">
-              <Battery className="h-4 w-4 mr-1" />
-              Soket Listrik
-            </div>
+          <label className={labelClass}>
+            <Battery className="h-4 w-4 mr-2 text-espresso/70" />
+            Soket Listrik
           </label>
-          <RatingStars
-            rating={powerOutlets}
-            interactive
-            onRatingChange={setPowerOutlets}
-          />
+          <RatingStars rating={powerOutlets} interactive onRatingChange={setPowerOutlets} />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <div className="flex items-center">
-              <VolumeX className="h-4 w-4 mr-1" />
-              Kebisingan
-            </div>
+          <label className={labelClass}>
+            <VolumeX className="h-4 w-4 mr-2 text-espresso/70" />
+            Kebisingan
           </label>
-          <RatingStars
-            rating={noiseLevel}
-            interactive
-            onRatingChange={setNoiseLevel}
-          />
+          <RatingStars rating={noiseLevel} interactive onRatingChange={setNoiseLevel} />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <div className="flex items-center">
-              <ThumbsUp className="h-4 w-4 mr-1" />
-              Kenyamanan
-            </div>
+          <label className={labelClass}>
+            <ThumbsUp className="h-4 w-4 mr-2 text-espresso/70" />
+            Kenyamanan
           </label>
-          <RatingStars
-            rating={comfort}
-            interactive
-            onRatingChange={setComfort}
-          />
+          <RatingStars rating={comfort} interactive onRatingChange={setComfort} />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          <div className="flex items-center">
-            <Star className="h-4 w-4 mr-1" />
-            Harga
-          </div>
+        <label className={labelClass}>
+          <Star className="h-4 w-4 mr-2 text-espresso/70" />
+          Harga
         </label>
-        <div className="flex space-x-2">
+        <div className="flex gap-2">
           {['$', '$$', '$$$'].map((level) => (
             <button
               key={level}
               type="button"
               onClick={() => setPriceLevel(priceLevel === level ? '' : level)}
-              className={`px-4 py-2 rounded-full text-sm ${
+              className={`px-4 py-2 rounded-full font-body text-sm transition-colors ${
                 priceLevel === level
-                  ? 'bg-amber-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                
+                  ? 'bg-caramel text-white'
+                  : 'bg-cream-dark text-espresso hover:bg-caramel/20'
               }`}
             >
               {level}
@@ -167,7 +119,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ initialData, isEditing = false,
       </div>
 
       <div>
-        <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="comment" className={labelClass}>
           Komentar *
         </label>
         <textarea
@@ -175,24 +127,24 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ initialData, isEditing = false,
           rows={4}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500"
-          placeholder="Share your experience working from this café..."
+          className="block w-full rounded-lg border border-caramel/30 bg-cream-light px-3 py-2 font-body text-sm text-espresso placeholder-gray-400 focus:border-caramel focus:outline-none focus:ring-1 focus:ring-caramel"
+          placeholder="Ceritakan pengalamanmu bekerja dari warkop ini..."
         />
       </div>
 
-      <div className="flex justify-end space-x-3">
+      <div className="flex justify-end gap-3">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+          className="rounded-lg border border-caramel/40 bg-transparent px-5 py-2 font-body text-sm font-medium text-espresso transition-colors hover:bg-cream-dark"
         >
-          Cancel
+          Batal
         </button>
         <button
           type="submit"
-          className="px-4 py-2 text-sm font-medium text-white bg-amber-600 border border-transparent rounded-md hover:bg-amber-700"
+          className="rounded-lg bg-caramel px-5 py-2 font-body text-sm font-medium text-white transition-colors hover:bg-caramel/90"
         >
-          {isEditing ? 'Update Review' : 'Submit Review'}
+          {isEditing ? 'Perbarui Review' : 'Kirim Review'}
         </button>
       </div>
     </form>
