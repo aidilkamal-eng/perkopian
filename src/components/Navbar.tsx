@@ -19,9 +19,11 @@ const Navbar: React.FC = () => {
   const isHome = pathname === '/';
   const isAuthPage = pathname === '/login' || pathname === '/signup';
   const isCafePage = pathname.startsWith('/cafes');
+  const isProfilePage = pathname.startsWith('/profile');
+  const isStickyPage = isCafePage || isProfilePage;
   const isOverlay = isHome || isAuthPage;
   const isTransparent = isHome && !isMenuOpen;
-  const isTranslucent = (isAuthPage || isCafePage) && !isMenuOpen;
+  const isTranslucent = (isAuthPage || isStickyPage) && !isMenuOpen;
 
   const linkStyle = isTransparent
     ? 'text-white/90 hover:text-white'
@@ -46,7 +48,7 @@ const Navbar: React.FC = () => {
   return (
     <nav 
       className={`w-full z-30 transition-colors ${
-        isOverlay ? 'absolute top-0 left-0' : 'relative'
+        isOverlay ? 'absolute top-0 left-0' : isStickyPage ? 'sticky top-0' : 'relative'
       } ${
         isTransparent
           ? 'bg-transparent'
